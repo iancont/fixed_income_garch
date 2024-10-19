@@ -46,9 +46,17 @@ R_test = df[df.index >= split_date]['price_return'].rolling(
 
 # Introducción
 
-La República Dominicana es el país latinoamericano que más ha crecido en los últimos cincuenta años, acompañado de un subsecuente aumento en la complejidad económica [@sanchez2024]. En un contexto de creciente globalización e internacionalización financiera, el mercado de renta fija, en especial el de la deuda pública juega un papel principal. Este se ha vuelto la clase de activo principal para fondos de pensiones como para fondos de inversion.  A pesar de este progreso, persisten desafíos estructurales como la baja liquidez en el mercado secundario y alta volatilidad. 
+El mercado de renta fija en la República Dominicana ha emergido como uno de los sectores más importantes dentro de la economía, especialmente en lo que respecta a la deuda pública, la cual juega un papel crucial en la financiación de proyectos gubernamentales y el sostenimiento de la política fiscal. En los últimos cincuenta años, el país ha experimentado un crecimiento económico significativo, consolidándose como una de las economías más dinámicas de América Latina. Este crecimiento ha estado acompañado por una mayor complejidad económica, lo que ha incrementado la relevancia del mercado financiero dominicano, en particular el mercado de deuda pública, que ha sido un activo clave para fondos de pensiones y fondos de inversión.
 
-Este estudio tiene como objetivo analizar los retornos y volatilidad del mercado de deuda publica Dominicana mediante la aplicación de modelos ARMA-GARCH, con el fin de identificar patrones y predecir su comportamiento futuro. Los resultados ofrecerán información valiosa para inversores, contribuyendo al entendimiento profundo del mercado de renta fija dominicano y facilitando una gestión más eficiente del riesgo.
+Sin embargo, este mercado también presenta importantes desafíos, especialmente en términos de baja liquidez en el mercado secundario y episodios de alta volatilidad. Estos problemas dificultan la previsión precisa de los movimientos del mercado y complican la toma de decisiones estratégicas para los inversores. En este contexto, surge la necesidad de utilizar herramientas econométricas que puedan capturar con mayor precisión las dinámicas subyacentes de los retornos y la volatilidad del mercado de deuda pública dominicano.
+
+La **pregunta de investigación** que guía este estudio es: ¿Es posible modelar adecuadamente los retornos y la volatilidad del mercado de deuda pública dominicano mediante modelos ARIMA-GARCH?, y ¿Qué tan efectivas son estas técnicas para predecir el comportamiento futuro del mercado, especialmente durante periodos de alta volatilidad?
+
+El **objetivo principal** de este estudio es aplicar modelos ARMA-GARCH para analizar y predecir el comportamiento de los retornos del índice de deuda pública IRP-GOBIX, considerando tanto la tendencia como los patrones de volatilidad del mercado. A través de la estimación de estos modelos, se busca identificar los principales factores que afectan la dinámica de los retornos y proporcionar información valiosa para los actores del mercado, facilitando una gestión más eficiente del riesgo.
+
+Además, este estudio pretende evaluar la **consistencia de los modelos** y determinar si los modelos de volatilidad más sofisticados, como el Zero-GARCH, ofrecen una mejor capacidad de predicción que los modelos tradicionales basados únicamente en niveles y diferencias, como el ARIMA. Un aspecto clave será analizar si el modelo GARCH captura adecuadamente los choques bruscos y los episodios de volatilidad extrema, o si suaviza excesivamente estos movimientos.
+
+La **relevancia** de este estudio radica en la creciente importancia del mercado de deuda pública dominicano, tanto para la estabilidad financiera del país como para los inversores extranjeros que buscan oportunidades de inversión en mercados emergentes. Comprender los patrones de retorno y volatilidad es esencial para diseñar estrategias de inversión que minimicen el riesgo y maximicen el rendimiento en un entorno económico globalizado y altamente incierto.
 
 # Metodología
 
@@ -205,11 +213,8 @@ Además, el estadístico de Jarque-Bera de 4395.18, con una probabilidad de $p =
 
 ## Modelo Zero-GARCH
 
-Para abordar las limitaciones del modelo ARIMA, se estimó un modelo GARCH(1,1) con media cero, siguiendo la estructura propuesta por Robert F. Engle, quien demostró que los modelos GARCH(1,1) son altamente efectivos para capturar la volatilidad en los retornos de mercados financieros. La elección de un modelo con media cero se justifica porque en mercados de deuda pública y tasas de interés, los retornos tienden a revertir a la media, y en el largo plazo se espera que los retornos por apreciación de capital converjan a cero. 
+Para abordar las limitaciones del modelo ARIMA, se estimó un modelo GARCH(1,1) con media cero, siguiendo la estructura propuesta por [@miah_rahman_2016], quienes demostrarón que los modelos GARCH(1,1) son altamente efectivos para capturar la volatilidad en los retornos de mercados financieros. La elección de un modelo con media cero se justifica porque en mercados de deuda pública y tasas de interés, los retornos tienden a revertir a la media, y en el largo plazo se espera que los retornos por apreciación de capital converjan a cero. [@fabozzi_fixed_income]
 
-<!-- Ojo, hay que citar a Engle -->
-
-<!-- No giher order garch models outperform the garch (1,1) when it comes to variance of markets returns -->
 
 ```{python}
 # | label: garch-model-fitting
@@ -251,19 +256,41 @@ La comparación entre los residuos estandarizados y los residuos de varianza uni
 
 Para evaluar la capacidad predictiva del modelo Zero-GARCH, se realizó un análisis de backtesting sobre el periodo comprendido durante el año 2021. Se emplearon dos métodos principales de evaluación: el MAPE (Mean Absolute Percentage Error) y el análisis gráfico de los valores predichos frente a los valores actuales de la desviación estándar móvil. 
 
+{{< embed notebooks/data-screening.qmd#fig-predicted-vs-actual-backtest >}}
+
 El análisis gráfico (Predichos vs Actuales) revela que el modelo captura de manera excelente la **tendencia** general de la serie, lo que implica que el modelo es eficiente a la hora de predecir los movimientos de largo plazo en la volatilidad. Sin embargo, un problema importante que surge es que el modelo tiende a suavizar los movimientos bruscos, especialmente en momentos donde la volatilidad sufre caídas o picos repentinos. Este fenómeno de **sobre-suavización** implica que el modelo no es completamente reactivo a los choques regresivos de gran magnitud, lo que puede deberse a la estructura propia del GARCH, la cual tiende a modelar la volatilidad alrededor de la media del periodo. 
 
 El MAPE calculado para el conjunto de test arroja un valor elevado de **739.70%**, lo cual podría sugerir en un análisis superficial que el modelo no es adecuado. Sin embargo, es importante considerar el tipo de mercado con el que estamos trabajando, caracterizado por una volatilidad intrínsecamente elevada y movimientos extremos. En estos contextos, valores altos de MAPE son comunes debido a la alta variabilidad en los retornos, lo que no necesariamente implica una mala capacidad predictiva, sino que refleja la naturaleza errática de los datos financieros. En este sentido, el MAPE alto está más relacionado con la complejidad del mercado que con la falta de ajuste del modelo.
 
 El backtesting del modelo Zero-GARCH sobre la serie de retornos del IRP-GOBIX para el periodo de 2021 confirma que, si bien el modelo captura correctamente la tendencia general de la volatilidad, su capacidad para reaccionar ante movimientos abruptos es limitada. A pesar de esto, dado el contexto del mercado de deuda pública dominicano, la sobre-suavización en los niveles es un comportamiento esperado en modelos de volatilidad como el GARCH. En resumen, el modelo es útil para predecir tendencias a largo plazo, pero su precisión en niveles podría mejorarse si se ajusta para reaccionar mejor a eventos extremos.
 
-# Discusión
+# Discusión y Conclusión
 
-# Conclusión
+## Discusión
 
-<!-- {{< embed notebooks/data-screening.qmd#fig-spatial-plot >}}
+Este estudio ha permitido modelar los retornos y la volatilidad del mercado de deuda pública dominicano utilizando modelos ARIMA-GARCH. A pesar de los hallazgos significativos, existen algunas limitaciones que deben considerarse al interpretar los resultados:
 
-@fig-spatial-plot shows the location of recent Earthquakes on La Palma. -->
+- **Problemas con la sobre-suavización**: Como se observó en el análisis retrospectivo, el modelo Zero-GARCH tiende a suavizar los movimientos bruscos en la volatilidad, lo que puede limitar su capacidad de capturar adecuadamente choques repentinos en el mercado. Aunque el modelo refleja bien la tendencia general, su capacidad de reacción frente a eventos extremos debe ser mejorada.
+
+- **MAPE elevado**: El MAPE obtenido durante la evaluación retrospectiva fue considerablemente alto. Si bien esto puede justificarse por la naturaleza volátil del mercado de deuda pública, sugiere que el modelo puede tener problemas para ajustarse a los movimientos de corto plazo. La alta volatilidad y los choques repentinos no fueron capturados con precisión, afectando el rendimiento del modelo.
+
+- **Limitaciones en los datos**: El análisis se centró en un período específico (2014-2021), excluyendo la pandemia debido a sus características atípicas. Si bien esto ayudó a evitar sesgos, la exclusión de este período crítico puede haber omitido dinámicas importantes del mercado en tiempos de crisis, limitando la generalización de los resultados.
+
+## Conclusión
+
+En conclusión, este estudio ha demostrado que el modelo ARIMA, aunque útil para capturar la estructura de los retornos del mercado de deuda pública dominicano, presenta limitaciones cuando se enfrenta a problemas de heterocedasticidad. El modelo Zero-GARCH, por su parte, ha demostrado ser más adecuado para describir la dinámica de la volatilidad, capturando fenómenos como la persistencia en la volatilidad y el clustering. Además, la capacidad del modelo para manejar eventos extremos a través de la distribución t de Student resulta valiosa en este tipo de mercados caracterizados por alta volatilidad y choques inesperados.
+
+Entre los principales hallazgos destacan:
+
+- **Volatility clustering**: El análisis confirmó la presencia de agrupación de volatilidad, donde periodos de baja volatilidad son seguidos por periodos de alta volatilidad, un fenómeno común en los mercados financieros.
+
+- **Persistencia de la volatilidad**: El coeficiente $\beta_1$ significativo en el modelo GARCH sugiere que los shocks en la volatilidad tienen un efecto prolongado en el tiempo, lo que es consistente con los patrones observados en mercados financieros emergentes como el dominicano.
+
+- **Dificultad para capturar movimientos extremos**: Aunque el modelo Zero-GARCH es efectivo en capturar la tendencia general, su capacidad para reaccionar ante cambios bruscos en la volatilidad sigue siendo limitada, lo cual es un área de mejora para futuras investigaciones.
+
+- **Implicaciones para los inversores**: Los resultados ofrecen una herramienta útil para la predicción de tendencias de volatilidad a largo plazo en el mercado de deuda pública dominicano, proporcionando una base para la toma de decisiones estratégicas en la gestión del riesgo.
+
+Este estudio no solo contribuye al entendimiento del comportamiento de los retornos y la volatilidad en el mercado de deuda pública dominicano.
 
 # Referencias
 
