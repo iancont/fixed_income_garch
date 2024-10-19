@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Contreras">
+<meta name="dcterms.date" content="2024-10-19">
+<meta name="keywords" content="Mercado de renta fija, Deuda pública, Modelos AR-GARCH">
+
+<title>Un estudio sobre los retornos del mercado de renta fija dominicano utilizando basados en modelos AR-GARCH</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta name="citation_title" content="Un estudio sobre los retornos del mercado de renta fija dominicano utilizando basados en modelos AR-GARCH">
+<meta name="citation_abstract" content="Este estudio tiene como objetivo analizar los retornos y la volatilidad del mercado de deuda pública dominicana mediante la aplicación de modelos ARMA-GARCH. A través de estos modelos, se busca identificar patrones en el comportamiento de los retornos y predecir su evolución futura.
+">
+<meta name="citation_keywords" content="Mercado de renta fija,Deuda pública,Modelos AR-GARCH">
+<meta name="citation_author" content="Ian Contreras">
+<meta name="citation_publication_date" content="2024-10-19">
+<meta name="citation_cover_date" content="2024-10-19">
+<meta name="citation_year" content="2024">
+<meta name="citation_online_date" content="2024-10-19">
+<meta name="citation_language" content="en">
+<meta name="citation_journal_title" content="Referencias">
+<meta name="citation_reference" content="citation_title=República dominicana, el país latinoamericano que avanza a más velocidad;,citation_author=Pablo Sánchez Arizaleta;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_fulltext_html_url=https://www.unav.edu/web/global-affairs/republica-dominicana-el-pais-latinoamericano-que-avanza-a-mas-velocidad;,citation_journal_title=Global Affairs, Universidad de Navarra;">
+<meta name="citation_reference" content="citation_title=GARCH 101: An introduction to the use of ARCH/GARCH models in applied econometrics;,citation_author=Robert Engle;,citation_publisher=https://web-static.stern.nyu.edu/rengle/GARCH101.PDF;">
+<meta name="citation_reference" content="citation_title=Measuring and testing the impact of news on volatility;,citation_author=Robert F. Engle;,citation_author=Victor Ng;,citation_publication_date=1993;,citation_cover_date=1993;,citation_year=1993;,citation_volume=48;,citation_journal_title=Journal of Finance;">
+<meta name="citation_reference" content="citation_title=El mercado de capitales en república dominicana: Aprovechando su potencial para el desarrollo;,citation_author=undefined OECD;,citation_publication_date=2012;,citation_cover_date=2012;,citation_year=2012;">
+<meta name="citation_reference" content="citation_title=Fondos de inversión en república dominicana;,citation_author=undefined ADOSAFI;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_publisher=https://adosafi.org/wp-content/uploads/2024/05/04.-Boletin-Abril-2024.pdf;">
+<meta name="citation_reference" content="citation_title=The handbook of fixed income securities;,citation_author=Frank J. Fabozzi;">
+<meta name="citation_reference" content="citation_title=Bashtage/arch: Release 4.18 (version v4.18);,citation_author=Kevin Sheppard;,citation_publication_date=2021;,citation_cover_date=2021;,citation_year=2021;,citation_doi=10.5281/zenodo.593254;,citation_publisher=Zenodo;">
+<meta name="citation_reference" content="citation_title=Modelling volatility of daily stock returns: Is GARCH(1,1) enough?;,citation_author=Mamun Miah;,citation_author=Azizur Rahman;,citation_publication_date=2016;,citation_cover_date=2016;,citation_year=2016;,citation_issue=01;,citation_volume=18;,citation_journal_title=American Scientific Research Journal for Engineering, Technology, and Sciences;">
+</head>
+
+<body>
+
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Un estudio sobre los retornos del mercado de renta fija dominicano utilizando basados en modelos AR-GARCH</h1>
+            <p class="subtitle lead">Trabajo final de tópicos de econometría</p>
+          </div>
+
+    
+    <div class="quarto-title-meta-container">
+      <div class="quarto-title-meta-column-start">
+            <div class="quarto-title-meta-author">
+          <div class="quarto-title-meta-heading">Author</div>
+          <div class="quarto-title-meta-heading">Affiliation</div>
+          
+                <div class="quarto-title-meta-contents">
+            <p class="author">Ian Contreras <a href="mailto:1116048@intec.edu.do" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        INSTITUTO TECNOLÓGICO DE SANTO DOMINGO (INTEC)
+                      </p>
+                  </div>
+                    </div>
+        
+        <div class="quarto-title-meta">
+
+                      
+                <div>
+            <div class="quarto-title-meta-heading">Published</div>
+            <div class="quarto-title-meta-contents">
+              <p class="date">October 19, 2024</p>
+            </div>
+          </div>
+          
+                
+              </div>
+      </div>
+      <div class="quarto-title-meta-column-end quarto-other-formats-target">
+      <div class="quarto-alternate-formats"><div class="quarto-title-meta-heading">Other Formats</div><div class="quarto-title-meta-contents"><p><a href="index.pdf"><i class="bi bi-file-pdf"></i>PDF (elsevier)</a></p></div><div class="quarto-title-meta-contents"><p><a href="index.docx"><i class="bi bi-file-word"></i>MS Word</a></p></div><div class="quarto-title-meta-contents"><p><a href="index-meca.zip" data-meca-link="true"><i class="bi bi-archive"></i>MECA Bundle</a></p></div></div></div>
+    </div>
+
+    <div>
+      <div class="abstract">
+        <div class="block-title">Abstract</div>
+        <p>Este estudio tiene como objetivo analizar los retornos y la volatilidad del mercado de deuda pública dominicana mediante la aplicación de modelos ARMA-GARCH. A través de estos modelos, se busca identificar patrones en el comportamiento de los retornos y predecir su evolución futura.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="keywords">
+        <div class="block-title">Keywords</div>
+        <p>Mercado de renta fija, Deuda pública, Modelos AR-GARCH</p>
+      </div>
+    </div>
+
+    <div class="quarto-other-links-text-target">
+    </div>  </div>
+</header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><span class="header-section-number">1</span> Introducción</a></li>
+  <li><a href="#metodología" id="toc-metodología" class="nav-link" data-scroll-target="#metodología"><span class="header-section-number">2</span> Metodología</a></li>
+  <li><a href="#datos" id="toc-datos" class="nav-link" data-scroll-target="#datos"><span class="header-section-number">3</span> Datos</a>
+  <ul class="collapse">
+  <li><a href="#fuente-de-datos" id="toc-fuente-de-datos" class="nav-link" data-scroll-target="#fuente-de-datos"><span class="header-section-number">3.1</span> Fuente de datos</a></li>
+  <li><a href="#sec-retorno-precio" id="toc-sec-retorno-precio" class="nav-link" data-scroll-target="#sec-retorno-precio"><span class="header-section-number">3.2</span> Índice de Retorno-Precio</a></li>
+  <li><a href="#sec-test-train" id="toc-sec-test-train" class="nav-link" data-scroll-target="#sec-test-train"><span class="header-section-number">3.3</span> Selección de muestra de entrenamiento/prueba</a></li>
+  </ul></li>
+  <li><a href="#sec-eda" id="toc-sec-eda" class="nav-link" data-scroll-target="#sec-eda"><span class="header-section-number">4</span> Análisis Exploratorio</a>
+  <ul class="collapse">
+  <li><a href="#sec-historico-retornos" id="toc-sec-historico-retornos" class="nav-link" data-scroll-target="#sec-historico-retornos"><span class="header-section-number">4.1</span> Histórico de retornos precio del mercado de deuda pública dominicano</a></li>
+  <li><a href="#sec-estadistica-descriptiva" id="toc-sec-estadistica-descriptiva" class="nav-link" data-scroll-target="#sec-estadistica-descriptiva"><span class="header-section-number">4.2</span> Análisis descriptivo de la muestra</a></li>
+  <li><a href="#sec-distribucion-retornos" id="toc-sec-distribucion-retornos" class="nav-link" data-scroll-target="#sec-distribucion-retornos"><span class="header-section-number">4.3</span> Análisis de la distribución de los retornos</a></li>
+  <li><a href="#evaluación-de-supuestos-para-análisis-ar-garch" id="toc-evaluación-de-supuestos-para-análisis-ar-garch" class="nav-link" data-scroll-target="#evaluación-de-supuestos-para-análisis-ar-garch"><span class="header-section-number">4.4</span> Evaluación de supuestos para análisis AR-GARCH</a>
+  <ul class="collapse">
+  <li><a href="#sec-estacionariedad" id="toc-sec-estacionariedad" class="nav-link" data-scroll-target="#sec-estacionariedad"><span class="header-section-number">4.4.1</span> Test de estacionariedad</a></li>
+  <li><a href="#sec-autocorrelacion" id="toc-sec-autocorrelacion" class="nav-link" data-scroll-target="#sec-autocorrelacion"><span class="header-section-number">4.4.2</span> Test de autocorrelación</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados"><span class="header-section-number">5</span> Resultados</a>
+  <ul class="collapse">
+  <li><a href="#análisis-del-modelo-arima" id="toc-análisis-del-modelo-arima" class="nav-link" data-scroll-target="#análisis-del-modelo-arima"><span class="header-section-number">5.1</span> Análisis del modelo ARIMA</a></li>
+  <li><a href="#modelo-zero-garch" id="toc-modelo-zero-garch" class="nav-link" data-scroll-target="#modelo-zero-garch"><span class="header-section-number">5.2</span> Modelo Zero-GARCH</a>
+  <ul class="collapse">
+  <li><a href="#residuos-del-zero-garch" id="toc-residuos-del-zero-garch" class="nav-link" data-scroll-target="#residuos-del-zero-garch"><span class="header-section-number">5.2.1</span> Residuos del Zero-GARCH</a></li>
+  <li><a href="#residuos-contra-volatilidad-condicional" id="toc-residuos-contra-volatilidad-condicional" class="nav-link" data-scroll-target="#residuos-contra-volatilidad-condicional"><span class="header-section-number">5.2.2</span> Residuos contra volatilidad condicional</a></li>
+  </ul></li>
+  <li><a href="#evaluación-retrospectiva-backtesting" id="toc-evaluación-retrospectiva-backtesting" class="nav-link" data-scroll-target="#evaluación-retrospectiva-backtesting"><span class="header-section-number">5.3</span> Evaluación Retrospectiva (Backtesting)</a></li>
+  </ul></li>
+  <li><a href="#discusión-y-conclusión" id="toc-discusión-y-conclusión" class="nav-link" data-scroll-target="#discusión-y-conclusión"><span class="header-section-number">6</span> Discusión y Conclusión</a>
+  <ul class="collapse">
+  <li><a href="#discusión" id="toc-discusión" class="nav-link" data-scroll-target="#discusión"><span class="header-section-number">6.1</span> Discusión</a></li>
+  <li><a href="#conclusión" id="toc-conclusión" class="nav-link" data-scroll-target="#conclusión"><span class="header-section-number">6.2</span> Conclusión</a></li>
+  </ul></li>
+  <li><a href="#referencias" id="toc-referencias" class="nav-link" data-scroll-target="#referencias"><span class="header-section-number">7</span> Referencias</a></li>
+  </ul>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="index-preview.html"><i class="bi bi-journal-code"></i>Article Notebook</a></li><li><a href="notebooks\data-extract-preview.html"><i class="bi bi-journal-code"></i>Data Extract</a></li><li><a href="notebooks\data-screening-preview.html"><i class="bi bi-journal-code"></i>Data Screening</a></li></ul></div></nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+  
+
+
+<section id="introducción" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introducción</h1>
+<p>El mercado de renta fija en la República Dominicana ha emergido como uno de los sectores más importantes dentro de la economía, especialmente en lo que respecta a la deuda pública, la cual juega un papel crucial en la financiación de proyectos gubernamentales y el sostenimiento de la política fiscal. En los últimos cincuenta años, el país ha experimentado un crecimiento económico significativo, consolidándose como una de las economías más dinámicas de América Latina. Este crecimiento ha estado acompañado por una mayor complejidad económica, lo que ha incrementado la relevancia del mercado financiero dominicano, en particular el mercado de deuda pública, que ha sido un activo clave para fondos de pensiones y fondos de inversión.</p>
+<p>Sin embargo, este mercado también presenta importantes desafíos, especialmente en términos de baja liquidez en el mercado secundario y episodios de alta volatilidad. Estos problemas dificultan la previsión precisa de los movimientos del mercado y complican la toma de decisiones estratégicas para los inversores. En este contexto, surge la necesidad de utilizar herramientas econométricas que puedan capturar con mayor precisión las dinámicas subyacentes de los retornos y la volatilidad del mercado de deuda pública dominicano.</p>
+<p>La <strong>pregunta de investigación</strong> que guía este estudio es: ¿Es posible modelar adecuadamente los retornos y la volatilidad del mercado de deuda pública dominicano mediante modelos ARIMA-GARCH?, y ¿Qué tan efectivas son estas técnicas para predecir el comportamiento futuro del mercado, especialmente durante periodos de alta volatilidad?</p>
+<p>El <strong>objetivo principal</strong> de este estudio es aplicar modelos ARMA-GARCH para analizar y predecir el comportamiento de los retornos del índice de deuda pública IRP-GOBIX, considerando tanto la tendencia como los patrones de volatilidad del mercado. A través de la estimación de estos modelos, se busca identificar los principales factores que afectan la dinámica de los retornos y proporcionar información valiosa para los actores del mercado, facilitando una gestión más eficiente del riesgo.</p>
+<p>Además, este estudio pretende evaluar la <strong>consistencia de los modelos</strong> y determinar si los modelos de volatilidad más sofisticados, como el Zero-GARCH, ofrecen una mejor capacidad de predicción que los modelos tradicionales basados únicamente en niveles y diferencias, como el ARIMA. Un aspecto clave será analizar si el modelo GARCH captura adecuadamente los choques bruscos y los episodios de volatilidad extrema, o si suaviza excesivamente estos movimientos.</p>
+<p>La <strong>relevancia</strong> de este estudio radica en la creciente importancia del mercado de deuda pública dominicano, tanto para la estabilidad financiera del país como para los inversores extranjeros que buscan oportunidades de inversión en mercados emergentes. Comprender los patrones de retorno y volatilidad es esencial para diseñar estrategias de inversión que minimicen el riesgo y maximicen el rendimiento en un entorno económico globalizado y altamente incierto.</p>
+</section>
+<section id="metodología" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Metodología</h1>
+<p>El modelo ARIMA(p,d,q), donde AR(p) es el componente autorregresivo de orden p, d denota el orden de la diferencia aplicada para transformar una serie temporal no estacionaria en estacionaria, y MA(q) representa el promedio móvil de orden q. La esencia del modelo ARIMA radica en la combinación de la operación de diferenciación y el modelo ARMA. Cualquier serie no estacionaria puede volverse estacionaria mediante una diferenciación de orden adecuado, permitiendo así ajustar un modelo ARMA a la serie transformada.</p>
+<p>El modelo de promedio móvil autorregresivo ARMA(p,q) incluye tanto un componente autorregresivo de orden p como uno de promedio móvil de orden q, y se estructura de la siguiente forma:</p>
+<p><span class="math display">\[
+X_t = \phi_1 X_{t-1} + \phi_2 X_{t-2} + \dots + \phi_p X_{t-p} + \epsilon_t + \theta_1 \epsilon_{t-1} + \theta_2 \epsilon_{t-2} + \dots + \theta_q \epsilon_{t-q}
+\]</span> {eq: arma}</p>
+<p>Estos modelos son adecuados solo para describir series temporales suaves, mientras que en la práctica, a menudo se trabaja con series temporales no suaves. Para estos casos, aplicar una o dos diferenciaciones puede transformar los datos en series suaves.</p>
+<p>Si no se cumple el supuesto de homogeneidad de la varianza, puede ocurrir heterocedasticidad. Dado que los datos de la muestra son suaves, en este documento se establece un modelo ARMA(p,q) para la serie de rendimientos con el fin de describir las características de volatilidad del índice GOBIX. Se realizan pruebas de efecto ARCH y se resuelve el problema de la heterocedasticidad mediante un modelo GARCH.</p>
+<p>El modelo GARCH extiende el modelo ARCH al considerar la autocorrelación de orden p en la función de heterocedasticidad, lo que permite ajustar de manera efectiva una función de heterocedasticidad con memoria a largo plazo. El modelo GARCH se define de la siguiente manera:</p>
+<p><span class="math display">\[
+a_t = \sigma_t \epsilon_t, \quad \sigma_t^2 = \alpha_0 + \sum_{i=1}^{p} \alpha_i a_{t-i}^2 + \sum_{j=1}^{q} \beta_j \sigma_{t-j}^2
+\]</span> {#eq: garch}</p>
+<p>El modelo GARCH, propuesto por Bollerslev, atribuye la volatilidad actual tanto a la volatilidad de momentos pasados como a los errores de momentos pasados, lo que le permite explicar el fenómeno de agrupación en la volatilidad de los rendimientos financieros.</p>
+</section>
+<section id="datos" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Datos</h1>
+<section id="fuente-de-datos" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="fuente-de-datos"><span class="header-section-number">3.1</span> Fuente de datos</h2>
+<p>Un Índice Financiero es una medida estadística que refleja el valor de un conjunto de activos financieros agrupados de acuerdo con ciertos criterios.Estos se utilizan como objetivo de rendimiento de portafolios, referencias sobre las características retorno/riesgo de una clase de activo y como referencia para productos anclados a índices.</p>
+<p>En el mercado de renta fija de la República Dominicana, el único índice público es el GOBIX, que representa la deuda gubernamental consolidada en peso. Este índice está compuesto por títulos emitidos localmente por el Banco Central y el Ministerio de Hacienda, y se publica en dos modalidades: índice de precio limpio e índice de retorno-precio. Para este estudio, se utilizará el índice de retorno precio <a href="#sec-retorno-precio" class="quarto-xref">Section&nbsp;3.2</a>, ya que aisla el componente de retorno de mercado el cual es el objetivo de estudio.</p>
+<p>El GOBIX se caracteriza por los siguientes criterios:</p>
+<ul>
+<li><strong>Elegibilidad</strong>: Solo se incluyen títulos “bullet” emitidos en pesos dominicanos con al menos 60 días desde su emisión.</li>
+<li><strong>Liquidez</strong>: Los títulos se seleccionan en función del Índice de Bursatilidad publicado por la Proveedora de Precios, garantizando la inclusión de los instrumentos más negociados.</li>
+<li><strong>Ponderación</strong>: La ponderación se realiza por capitalización de mercado, lo que asegura que los títulos más relevantes tengan mayor peso en el índice.</li>
+<li><strong>Rebalanceo</strong>: Se efectúa un rebalanceo mensual para ajustar el índice según la disponibilidad de inversión en los bonos.</li>
+<li><strong>Fuentes de información</strong>: Los datos provienen de la Bolsa de Valores de la República Dominicana y la Proveedora de Precios.</li>
+</ul>
+</section>
+<section id="sec-retorno-precio" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="sec-retorno-precio"><span class="header-section-number">3.2</span> Índice de Retorno-Precio</h2>
+<p>El índice de retorno-precio es una metodología utilizada para calcular el rendimiento de un índice de renta fija, centrándose exclusivamente en las variaciones del precio limpio de los títulos, sin tener en cuenta los intereses acumulados ni el pago de cupones durante el período de cálculo. En el contexto del GOBIX, este índice refleja las fluctuaciones en los precios de los bonos dominicanos debido a las variaciones en las tasas de interés del mercado.</p>
+<p><strong>Características del Índice de Retorno-Precio del GOBIX</strong>:</p>
+<ul>
+<li><p><strong>Enfoque en el Precio Limpio</strong>: El cálculo del índice se basa en el precio limpio de los bonos, excluyendo los intereses acumulados.</p></li>
+<li><p><strong>Reflejo de la Volatilidad</strong>: Este índice es un indicador del riesgo asociado a las fluctuaciones en las tasas de interés y su impacto en el capital invertido.</p></li>
+<li><p><strong>Fórmula de Cálculo</strong>:</p>
+<p><span class="math display">\[
+IRP_t = IRP_{m-1} \times (1 + RPI_t)
+\]</span></p>
+<p>Donde:</p>
+<ul>
+<li><span class="math inline">\(IRP_0 = 100\)</span> es el valor base del índice en la fecha de inicio.</li>
+<li><span class="math inline">\(IRP_t\)</span> es el valor del índice en el día <span class="math inline">\(t\)</span>.</li>
+<li><span class="math inline">\(IRP_{m-1}\)</span> es el valor del índice en el último día hábil del mes anterior.</li>
+<li><span class="math inline">\(RPI_t\)</span> es el retorno-precio del índice en <span class="math inline">\(t\)</span>.</li>
+</ul></li>
+</ul>
+<p>El retorno-precio del índice (<span class="math inline">\(RPI_t\)</span>) se calcula como la suma ponderada del retorno-precio de cada bono (<span class="math inline">\(RPI_{i,t}\)</span>), donde la ponderación (<span class="math inline">\(\omega_i\)</span>) se determina según la capitalización de mercado de cada bono.</p>
+<p>En este análisis, expresaremos la serie de retornos en puntos básicos para evitar problemas de escalamiento de los datos y posibles desbordamientos decimales (overflow decimal), que pueden ocurrir cuando se manejan fluctuaciones muy pequeñas con alta precisión. Un punto básico equivale a 0.01% o 1/100 de un porcentaje. Este enfoque nos permitirá manejar los datos con mayor estabilidad y evitar posibles errores numéricos derivados del escalamiento inapropiado. No tiene efectos estadísticos en las distribución.</p>
+</section>
+<section id="sec-test-train" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="sec-test-train"><span class="header-section-number">3.3</span> Selección de muestra de entrenamiento/prueba</h2>
+<p>Durante la pandemia, se experimentó uno de los ciclos de tasas de interés más pronunciados de las últimas décadas. Este periodo presentó características estructurales distintas en comparación con los ciclos históricos previos. Para evitar sesgos en las estimaciones debido a la alta volatilidad observada durante ese tiempo, evaluaremos únicamente la serie de retornos entre el periodo 2014-2021, que se considera un ciclo de tasas más regular.</p>
+<p>La metodología empleada para dividir el conjunto de datos en muestras de entrenamiento y prueba será el <strong>Time Series Cross-Validator</strong>. A diferencia de la validación cruzada tradicional, que aleatoriza los datos, esta técnica respeta el orden temporal, lo cual es crucial en el análisis de series de tiempo.</p>
+<p>En cada partición (k-ésimo split), la técnica funciona de la siguiente manera:</p>
+<ul>
+<li><strong>Conjunto de Entrenamiento</strong>: Incluye los primeros <em>k</em> pliegues (folds).</li>
+<li><strong>Conjunto de Prueba</strong>: Incluye el pliegue <em>(k+1)</em>.</li>
+</ul>
+</section>
+</section>
+<section id="sec-eda" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Análisis Exploratorio</h1>
+<p>El objetivo de este análisis exploratorio es examinar la serie de retornos diarios del IRP-GOBIX para identificar patrones de volatilidad, evaluar la distribución de los retornos, y explorar la autocorrelación en los datos. Utilizando herramientas estadísticas como la distribución de los retornos, el test de estacionariedad Dickey-Fuller, y los gráficos de autocorrelación (ACF) y autocorrelación parcial (PACF), se busca comprender la dinámica temporal de los retornos y validar la aplicación de modelos ARMA-GARCH para capturar su comportamiento futuro. Adicionalmente, se ajustarán diversas distribuciones teóricas, como la distribución normal y la t de Student, para evaluar su capacidad de describir las características empíricas de los datos.</p>
+<section id="sec-historico-retornos" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sec-historico-retornos"><span class="header-section-number">4.1</span> Histórico de retornos precio del mercado de deuda pública dominicano</h2>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-price-return-series" class="cell" data-execution_count="3">
+<div class="cell-output cell-output-display">
+<div id="fig-price-return-series" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-price-return-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-data-screening-fig-price-return-series-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX."><img src="index_files/figure-html/notebooks-data-screening-fig-price-return-series-output-2.png" width="976" height="781" class="figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-price-return-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>El análisis de la serie de retornos diarios del IRP-GOBIX revela un comportamiento interesante, con periodos prolongados de baja volatilidad seguidos por episodios de alta volatilidad. Entre 2015 y 2022, los retornos se mantuvieron generalmente dentro de un rango de ±50 puntos básicos, lo que indica una estabilidad relativa. Sin embargo, en momentos clave, como el ciclo de tasas de 2018, la volatilidad se incrementó drásticamente, alcanzando picos de hasta 200 puntos básicos. Este patrón es característico del fenómeno conocido como <strong>“volatility clustering”</strong>, donde periodos tranquilos son seguidos por fases de mayor volatilidad. La naturaleza de estos picos parece estar relacionada con factores externos, como cambios en las tasas de interés y la incertidumbre macroeconómica global, lo que subraya la importancia de emplear modelos ARMA-GARCH para capturar estas dinámicas y prever comportamientos futuros en el mercado de deuda pública dominicana.</p>
+</section>
+<section id="sec-estadistica-descriptiva" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-estadistica-descriptiva"><span class="header-section-number">4.2</span> Análisis descriptivo de la muestra</h2>
+<div id="cell-return-descriptive-stats" class="cell" data-execution_count="4">
+<div id="return-descriptive-stats" class="cell-output cell-output-display" data-execution_count="3">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Observations</th>
+<th data-quarto-table-cell-role="th">Mean</th>
+<th data-quarto-table-cell-role="th">Median</th>
+<th data-quarto-table-cell-role="th">Std. Dev</th>
+<th data-quarto-table-cell-role="th">Skewness</th>
+<th data-quarto-table-cell-role="th">Kurtosis</th>
+<th data-quarto-table-cell-role="th">Jarque-Bera</th>
+<th data-quarto-table-cell-role="th">Prob.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1941</td>
+<td>1.353251</td>
+<td>-0.318044</td>
+<td>23.502911</td>
+<td>0.70527</td>
+<td>7.587995</td>
+<td>4789.532331</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+<p>Tabla de las estadísticas descriptiva de la serie de retornos</p>
+</div>
+</div>
+<p>El análisis descriptivo de los retornos ofrece una perspectiva más detallada sobre la distribución de la serie. Con un total de 1,941 observaciones, la <strong>media</strong> de los retornos es de <span class="math inline">\(1.353251\)</span>, lo que indica un rendimiento promedio positivo. Sin embargo, la <strong>mediana</strong> de <span class="math inline">\(-0.318044\)</span> sugiere un leve sesgo hacia valores negativos, lo que refleja que la mayoría de los retornos tienden a ser ligeramente inferiores a la media. La <strong>desviación estándar</strong>, con un valor de <span class="math inline">\(23.502911\)</span>, revela una amplia dispersión de los datos, lo que confirma la presencia de una volatilidad significativa en los rendimientos, muy superior al valor medio.</p>
+<p>En cuanto a la <strong>asimetría</strong> (<span class="math inline">\(0.70527\)</span>), se observa una ligera inclinación hacia valores extremos positivos, lo que implica la existencia de eventos fuera de lo común que afectan los rendimientos. La <strong>kurtosis</strong> de <span class="math inline">\(7.587995\)</span> indica una distribución <strong>leptocúrtica</strong>, caracterizada por una alta concentración de valores alrededor de la media y colas más gruesas que una distribución normal, lo que es típico en datos financieros que presentan eventos extremos. El <strong>test de Jarque-Bera</strong>, con un valor de <span class="math inline">\(4,789.532331\)</span>, confirma que la serie no sigue una distribución normal, validando la presencia de asimetría y colas pesadas en los datos. Estos resultados resaltan la necesidad de emplear modelos que puedan capturar adecuadamente estos comportamientos no lineales, esenciales para el análisis del mercado.</p>
+</section>
+<section id="sec-distribucion-retornos" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-distribucion-retornos"><span class="header-section-number">4.3</span> Análisis de la distribución de los retornos</h2>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-distribution-fitting" class="cell" data-execution_count="5">
+<div class="cell-output cell-output-display">
+<div id="fig-distribution-fitting" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-distribution-fitting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-data-screening-fig-distribution-fitting-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Ajuste de distribuciones a los retornos de precio."><img src="index_files/figure-html/notebooks-data-screening-fig-distribution-fitting-output-1.png" width="829" height="503" class="figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-distribution-fitting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Ajuste de distribuciones a los retornos de precio.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Al ajustar diferentes distribuciones a los retornos, observamos que la distribución empírica (en azul) tiene una alta concentración en torno a cero, con colas más gruesas de lo que se esperaría bajo una distribución normal. Entre las distribuciones probadas, la t de Student (en rojo) es la que mejor captura los valores extremos, con colas más largas y una mayor concentración en el centro, lo que es típico en series financieras que experimentan episodios de alta volatilidad. En contraste, la distribución normal (en naranja) y la lognormal (en verde) subestiman las colas, demostrando su ineficacia para modelar adecuadamente los valores atípicos. Esto refuerza la idea de que la t de Student es una mejor candidata para modelar los retornos, dado que puede ajustarse mejor a la leptocurtosis observada en los datos.</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-tqq-plot" class="cell" data-execution_count="6">
+<div class="cell-output cell-output-display">
+<div id="fig-tqq-plot" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tqq-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-data-screening-fig-tqq-plot-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Q-Q Plot de retornos de precio contra la distribución t."><img src="index_files/figure-html/notebooks-data-screening-fig-tqq-plot-output-1.png" width="976" height="819" class="figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tqq-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Q-Q Plot de retornos de precio contra la distribución t.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>La gráfica Q-Q (Quantile-Quantile) compara los cuantiles teóricos de la distribución t de Student con los cuantiles observados de los retornos del GOBIX. En general, la mayoría de los puntos se alinean bien con la línea roja, lo que sugiere que los retornos de precios siguen razonablemente esta distribución, particularmente en las partes centrales. Sin embargo, en las colas extremas, se observan algunas desviaciones, lo que indica que, aunque la t de Student es un buen ajuste, no es perfecta para todos los escenarios.</p>
+<p>El <strong>estadístico de Kolmogorov-Smirnov</strong> es de <span class="math inline">\(0.0286\)</span>, con un <strong>p-valor</strong> de <span class="math inline">\(0.0827\)</span>. Aunque esto sugiere que la t de Student captura bien la mayor parte de los retornos, las discrepancias en las colas extremas muestran que la distribución teórica no es un ajuste exacto a los datos reales.</p>
+</section>
+<section id="evaluación-de-supuestos-para-análisis-ar-garch" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="evaluación-de-supuestos-para-análisis-ar-garch"><span class="header-section-number">4.4</span> Evaluación de supuestos para análisis AR-GARCH</h2>
+<section id="sec-estacionariedad" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="sec-estacionariedad"><span class="header-section-number">4.4.1</span> Test de estacionariedad</h3>
+<p>Para garantizar la validez de los modelos ARMA y GARCH, se evaluó la estacionariedad de la serie de retornos utilizando el test de Dickey-Fuller aumentado (ADF). Los resultados obtenidos muestran un <strong>ADF Statistic</strong> de <span class="math inline">\(-13.1741\)</span> y un <strong>p-valor</strong> de <span class="math inline">\(1.2333 \times 10^{-24}\)</span>, lo que permite rechazar la hipótesis nula de raíz unitaria con un nivel de significancia del 5%. Esto confirma que la serie es estacionaria, lo que significa que sus fluctuaciones se distribuyen alrededor de una media constante en el tiempo, sin tendencia significativa. Este hallazgo es consistente con el comportamiento típico de las series de retornos financieros, lo que habilita la correcta estimación de modelos ARMA-GARCH para capturar las dinámicas del mercado.</p>
+</section>
+<section id="sec-autocorrelacion" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="sec-autocorrelacion"><span class="header-section-number">4.4.2</span> Test de autocorrelación</h3>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-acf-pacf" class="cell" data-execution_count="9">
+<div class="cell-output cell-output-display">
+<div id="fig-acf-pacf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-acf-pacf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-data-screening-fig-acf-pacf-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos."><img src="index_files/figure-html/notebooks-data-screening-fig-acf-pacf-output-1.png" width="950" height="757" class="figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acf-pacf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>El análisis de autocorrelación nos proporciona más detalles sobre la estructura interna de la serie. El gráfico de la <strong>Función de Autocorrelación (ACF)</strong> muestra un pico significativo en el primer rezago, seguido de valores cercanos a cero para los rezagos posteriores. Este patrón es indicativo de un proceso de media móvil de primer orden (<strong>MA(1)</strong>), donde los choques aleatorios tienen un impacto significativo en el primer rezago pero no en los siguientes. La <strong>Función de Autocorrelación Parcial (PACF)</strong> refuerza esta conclusión, mostrando un comportamiento similar con un pico en el primer rezago y valores prácticamente nulos a partir del segundo rezago. Esto sugiere que un modelo MA(1) sería apropiado para capturar las dinámicas de corto plazo en la serie.</p>
+<p>En conjunto, este análisis exploratorio sugiere que la serie de retornos del IRP-GOBIX presenta características complejas, como <strong>volatility clustering</strong>, alta <strong>leptocurtosis</strong>, y una estructura de autocorrelación que se ajusta bien a un modelo MA(1). Estos hallazgos proporcionan una base sólida para la estimación de modelos ARMA-GARCH, los cuales podrán capturar de manera efectiva las dinámicas de volatilidad y retornos en el mercado de deuda pública dominicano.</p>
+</section>
+</section>
+</section>
+<section id="resultados" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Resultados</h1>
+<p>El presente análisis tiene como objetivo modelar la serie temporal de retornos del índice IRP-GOBIX utilizando inicialmente un modelo ARIMA automático (auto-ARIMA) para determinar si es posible capturar la dinámica de los retornos con un modelo basado únicamente en niveles y diferencias de los datos. Adicionalmente, se evaluará la presencia de problemas estructurales, como la heterocedasticidad, que podrían afectar la consistencia del modelo ARIMA. En caso de que este enfoque no sea adecuado, recurriremos a un modelo Zero-GARCH, un tipo específico de GARCH que asume una media cero para los retornos. Este modelo es particularmente útil en mercados de tasas de interés, donde se ha demostrado que los retornos tienden a cero en el largo plazo debido a la fuerte regresión hacia la media de estas variables.</p>
+<section id="análisis-del-modelo-arima" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="análisis-del-modelo-arima"><span class="header-section-number">5.1</span> Análisis del modelo ARIMA</h2>
+<div id="cell-arima-model" class="cell" data-execution_count="5">
+<div id="arima-model" class="cell-output cell-output-display" data-execution_count="4">
+<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>SARIMAX Results</caption>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Dep. Variable:</td>
+<td>y</td>
+<td data-quarto-table-cell-role="th">No. Observations:</td>
+<td>1941</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Model:</td>
+<td>SARIMAX(3, 0, 4)</td>
+<td data-quarto-table-cell-role="th">Log Likelihood</td>
+<td>-8853.517</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Date:</td>
+<td>Sat, 19 Oct 2024</td>
+<td data-quarto-table-cell-role="th">AIC</td>
+<td>17725.034</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Time:</td>
+<td>15:09:21</td>
+<td data-quarto-table-cell-role="th">BIC</td>
+<td>17775.173</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Sample:</td>
+<td>0</td>
+<td data-quarto-table-cell-role="th">HQIC</td>
+<td>17743.472</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th"></td>
+<td>- 1941</td>
+<td data-quarto-table-cell-role="th"></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Covariance Type:</td>
+<td>opg</td>
+<td data-quarto-table-cell-role="th"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td></td>
+<td data-quarto-table-cell-role="th">coef</td>
+<td data-quarto-table-cell-role="th">std err</td>
+<td data-quarto-table-cell-role="th">z</td>
+<td data-quarto-table-cell-role="th">P&gt;|z|</td>
+<td data-quarto-table-cell-role="th">[0.025</td>
+<td data-quarto-table-cell-role="th">0.975]</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">intercept</td>
+<td>0.3602</td>
+<td>0.273</td>
+<td>1.317</td>
+<td>0.188</td>
+<td>-0.176</td>
+<td>0.896</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">ar.L1</td>
+<td>0.1366</td>
+<td>0.065</td>
+<td>2.106</td>
+<td>0.035</td>
+<td>0.009</td>
+<td>0.264</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ar.L2</td>
+<td>-0.1931</td>
+<td>0.066</td>
+<td>-2.934</td>
+<td>0.003</td>
+<td>-0.322</td>
+<td>-0.064</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">ar.L3</td>
+<td>0.7691</td>
+<td>0.061</td>
+<td>12.644</td>
+<td>0.000</td>
+<td>0.650</td>
+<td>0.888</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ma.L1</td>
+<td>-0.1139</td>
+<td>0.065</td>
+<td>-1.752</td>
+<td>0.080</td>
+<td>-0.241</td>
+<td>0.014</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">ma.L2</td>
+<td>0.2163</td>
+<td>0.067</td>
+<td>3.220</td>
+<td>0.001</td>
+<td>0.085</td>
+<td>0.348</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">ma.L3</td>
+<td>-0.7032</td>
+<td>0.062</td>
+<td>-11.315</td>
+<td>0.000</td>
+<td>-0.825</td>
+<td>-0.581</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">ma.L4</td>
+<td>0.0750</td>
+<td>0.020</td>
+<td>3.715</td>
+<td>0.000</td>
+<td>0.035</td>
+<td>0.115</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">sigma2</td>
+<td>536.2183</td>
+<td>8.358</td>
+<td>64.154</td>
+<td>0.000</td>
+<td>519.836</td>
+<td>552.600</td>
+</tr>
+</tbody>
+</table>
+
+
+<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Ljung-Box (L1) (Q):</td>
+<td>0.00</td>
+<td data-quarto-table-cell-role="th">Jarque-Bera (JB):</td>
+<td>4395.18</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Prob(Q):</td>
+<td>1.00</td>
+<td data-quarto-table-cell-role="th">Prob(JB):</td>
+<td>0.00</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Heteroskedasticity (H):</td>
+<td>1.11</td>
+<td data-quarto-table-cell-role="th">Skew:</td>
+<td>0.59</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Prob(H) (two-sided):</td>
+<td>0.17</td>
+<td data-quarto-table-cell-role="th">Kurtosis:</td>
+<td>10.28</td>
+</tr>
+</tbody>
+</table>
+<br><br>Warnings:<br>[1] Covariance matrix calculated using the outer product of gradients (complex-step).
+<p>Modelo ARIMA de maxima verosimilitud para la serie de retornos.</p>
+</div>
+</div>
+<p>El modelo SARIMAX(3, 0, 4) se estimó con el objetivo de capturar la dinámica subyacente de la serie de retornos. Aunque los resultados muestran que algunos de los coeficientes del componente autorregresivo (AR) y del promedio móvil (MA) son estadísticamente significativos (e.g., <span class="math inline">\(AR(3)\)</span> con un coeficiente de <span class="math inline">\(0.7691\)</span>, <span class="math inline">\(p &lt; 0.001\)</span> y <span class="math inline">\(MA(2)\)</span> con <span class="math inline">\(p &lt; 0.01\)</span>), el desempeño general del modelo presenta ciertas limitaciones. El test de heterocedasticidad muestra un valor de 1.11, lo que indica la presencia de heterocedasticidad en la serie, un problema común en series financieras, donde la varianza de los errores no es constante a lo largo del tiempo.</p>
+<p>Además, el estadístico de Jarque-Bera de 4395.18, con una probabilidad de <span class="math inline">\(p = 0.00\)</span>, confirma que los residuos no siguen una distribución normal, lo que refuerza la idea de que un modelo basado únicamente en niveles, como el ARIMA, podría no ser suficiente para capturar la volatilidad inherente a los retornos del mercado de deuda pública dominicano. Dado que los modelos ARIMA no están diseñados para abordar adecuadamente la heterocedasticidad, pasamos a estimar un modelo GARCH, que es más apropiado para capturar los cambios en la volatilidad.</p>
+</section>
+<section id="modelo-zero-garch" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="modelo-zero-garch"><span class="header-section-number">5.2</span> Modelo Zero-GARCH</h2>
+<p>Para abordar las limitaciones del modelo ARIMA, se estimó un modelo GARCH(1,1) con media cero, siguiendo la estructura propuesta por <span class="citation" data-cites="miah_rahman_2016">(<a href="#ref-miah_rahman_2016" role="doc-biblioref">Miah and Rahman 2016</a>)</span>, quienes demostrarón que los modelos GARCH(1,1) son altamente efectivos para capturar la volatilidad en los retornos de mercados financieros. La elección de un modelo con media cero se justifica porque en mercados de deuda pública y tasas de interés, los retornos tienden a revertir a la media, y en el largo plazo se espera que los retornos por apreciación de capital converjan a cero. <span class="citation" data-cites="fabozzi_fixed_income">(<a href="#ref-fabozzi_fixed_income" role="doc-biblioref">Fabozzi n.d.</a>)</span></p>
+<div id="cell-garch-model" class="cell" data-execution_count="7">
+<div id="garch-model" class="cell-output cell-output-display" data-execution_count="6">
+<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Zero Mean - GARCH Model Results</caption>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Dep. Variable:</td>
+<td>price_return</td>
+<td data-quarto-table-cell-role="th">R-squared:</td>
+<td>0.000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Mean Model:</td>
+<td>Zero Mean</td>
+<td data-quarto-table-cell-role="th">Adj. R-squared:</td>
+<td>0.001</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Vol Model:</td>
+<td>GARCH</td>
+<td data-quarto-table-cell-role="th">Log-Likelihood:</td>
+<td>-7622.87</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Distribution:</td>
+<td>Standardized Student's t</td>
+<td data-quarto-table-cell-role="th">AIC:</td>
+<td>15253.7</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Method:</td>
+<td>Maximum Likelihood</td>
+<td data-quarto-table-cell-role="th">BIC:</td>
+<td>15275.6</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th"></td>
+<td></td>
+<td data-quarto-table-cell-role="th">No. Observations:</td>
+<td>1753</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">Date:</td>
+<td>Sat, Oct 19 2024</td>
+<td data-quarto-table-cell-role="th">Df Residuals:</td>
+<td>1753</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">Time:</td>
+<td>15:09:21</td>
+<td data-quarto-table-cell-role="th">Df Model:</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+
+
+<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Volatility Model</caption>
+<tbody>
+<tr class="odd">
+<td></td>
+<td data-quarto-table-cell-role="th">coef</td>
+<td data-quarto-table-cell-role="th">std err</td>
+<td data-quarto-table-cell-role="th">t</td>
+<td data-quarto-table-cell-role="th">P&gt;|t|</td>
+<td data-quarto-table-cell-role="th">95.0% Conf. Int.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">omega</td>
+<td>58.8679</td>
+<td>25.182</td>
+<td>2.338</td>
+<td>1.940e-02</td>
+<td>[ 9.512,1.082e+02]</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">alpha[1]</td>
+<td>0.1892</td>
+<td>6.657e-02</td>
+<td>2.842</td>
+<td>4.482e-03</td>
+<td>[5.873e-02, 0.320]</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">beta[1]</td>
+<td>0.7737</td>
+<td>6.832e-02</td>
+<td>11.324</td>
+<td>9.943e-30</td>
+<td>[ 0.640, 0.908]</td>
+</tr>
+</tbody>
+</table>
+
+
+<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Distribution</caption>
+<tbody>
+<tr class="odd">
+<td></td>
+<td data-quarto-table-cell-role="th">coef</td>
+<td data-quarto-table-cell-role="th">std err</td>
+<td data-quarto-table-cell-role="th">t</td>
+<td data-quarto-table-cell-role="th">P&gt;|t|</td>
+<td data-quarto-table-cell-role="th">95.0% Conf. Int.</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">nu</td>
+<td>2.7894</td>
+<td>0.230</td>
+<td>12.114</td>
+<td>8.853e-34</td>
+<td>[ 2.338, 3.241]</td>
+</tr>
+</tbody>
+</table>
+<br><br>Covariance estimator: robust
+<p>Modelo Zero-Garch de la serie de retornos</p>
+</div>
+</div>
+<p>Los resultados del modelo Zero-GARCH confirman un buen ajuste a la volatilidad de la serie de retornos. El coeficiente <span class="math inline">\(\omega\)</span> del proceso de volatilidad es de <span class="math inline">\(58.8679\)</span> (<span class="math inline">\(p &lt; 0.05\)</span>), lo que indica un nivel base significativo de volatilidad en la serie. El parámetro <span class="math inline">\(\alpha_1\)</span>, que mide la influencia de los shocks pasados en la volatilidad actual, es positivo y significativo (<span class="math inline">\(0.1892\)</span>, <span class="math inline">\(p &lt; 0.01\)</span>), lo que sugiere que los shocks pasados tienen un impacto considerable en la volatilidad presente. Por otro lado, <span class="math inline">\(\beta_1\)</span> (<span class="math inline">\(0.7737\)</span>, <span class="math inline">\(p &lt; 0.001\)</span>) indica que existe una fuerte persistencia en la volatilidad, característica común en los mercados financieros, donde las fases de alta volatilidad tienden a durar varios periodos.</p>
+<p>El uso de la distribución t de Student para los residuos estandarizados, con un parámetro <span class="math inline">\(\nu\)</span> de <span class="math inline">\(2.7894\)</span> (<span class="math inline">\(p &lt; 0.001\)</span>), confirma la presencia de colas más gruesas en la distribución de los retornos, lo que es consistente con la leptocurtosis observada en la serie de retornos.</p>
+<section id="residuos-del-zero-garch" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="residuos-del-zero-garch"><span class="header-section-number">5.2.1</span> Residuos del Zero-GARCH</h3>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-garch-residuals" class="cell" data-execution_count="13">
+<div class="cell-output cell-output-display">
+<div id="fig-garch-residuals" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-garch-residuals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-data-screening-fig-garch-residuals-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Residuos del modelo AR-GARCH."><img src="index_files/figure-html/notebooks-data-screening-fig-garch-residuals-output-1.png" width="582" height="431" class="figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-garch-residuals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Residuos del modelo AR-GARCH.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>Al analizar los residuos estandarizados y la volatilidad condicional en el modelo Zero-GARCH, observamos cómo la volatilidad responde de manera dinámica a los choques en los retornos. En la primera gráfica, se aprecia que la volatilidad condicional es mayor durante episodios donde los residuos estandarizados alcanzan picos extremos, especialmente en periodos de alta volatilidad como 2018. Esto refuerza la capacidad del modelo GARCH para capturar <strong>volatility clustering</strong>, un fenómeno donde la alta volatilidad tiende a agruparse en ciertos periodos. Además, la persistencia de la volatilidad condicional a lo largo del tiempo confirma que los choques pasados tienen un efecto prolongado, lo cual es coherente con los resultados obtenidos en los coeficientes del modelo GARCH.</p>
+</section>
+<section id="residuos-contra-volatilidad-condicional" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="residuos-contra-volatilidad-condicional"><span class="header-section-number">5.2.2</span> Residuos contra volatilidad condicional</h3>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-residuals-vs-volatility" class="cell" data-execution_count="14">
+<div class="cell-output cell-output-display">
+<div id="fig-residuals-vs-volatility" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-residuals-vs-volatility-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-data-screening-fig-residuals-vs-volatility-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Residuos contra la volatilidad condicional del AR-GARCH."><img src="index_files/figure-html/notebooks-data-screening-fig-residuals-vs-volatility-output-1.png" width="593" height="411" class="figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-residuals-vs-volatility-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Residuos contra la volatilidad condicional del AR-GARCH.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>En cuanto a la comparación entre los residuos estandarizados y los residuos de varianza unitaria, la segunda gráfica revela que ambos conjuntos de residuos presentan distribuciones similares, con una alta concentración alrededor de cero. Sin embargo, las colas más gruesas en los residuos estandarizados indican la presencia de eventos extremos más pronunciados, los cuales son típicos en series financieras que presentan leptocurtosis. Esta comparación subraya la importancia de utilizar distribuciones robustas, como la t de Student, para capturar adecuadamente las colas de la distribución, tal como lo hace el modelo GARCH en este caso.</p>
+<p>Los resultados del modelo Zero-GARCH confirman su capacidad para modelar de manera efectiva la volatilidad en los retornos del IRP-GOBIX. Aunque el modelo auto-ARIMA capturó algunos patrones de la serie, su inconsistencia en la presencia de heterocedasticidad subraya la necesidad de un enfoque basado en modelos GARCH. El modelo Zero-GARCH no solo demuestra un buen ajuste a los datos, sino que también captura la dinámica de la volatilidad condicional y los residuos estandarizados, revelando la presencia de <strong>volatility clustering</strong> y la persistencia en la volatilidad.</p>
+<p>La comparación entre los residuos estandarizados y los residuos de varianza unitaria destaca la capacidad del modelo para manejar eventos extremos, una característica esencial en el análisis de series financieras. En resumen, el modelo Zero-GARCH es más robusto y adecuado para describir las dinámicas de volatilidad en el mercado de deuda pública dominicano, brindando información crucial sobre la persistencia y el comportamiento de la volatilidad a lo largo del tiempo.</p>
+</section>
+</section>
+<section id="evaluación-retrospectiva-backtesting" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="evaluación-retrospectiva-backtesting"><span class="header-section-number">5.3</span> Evaluación Retrospectiva (Backtesting)</h2>
+<p>Para evaluar la capacidad predictiva del modelo Zero-GARCH, se realizó un análisis de backtesting sobre el periodo comprendido durante el año 2021. Se emplearon dos métodos principales de evaluación: el MAPE (Mean Absolute Percentage Error) y el análisis gráfico de los valores predichos frente a los valores actuales de la desviación estándar móvil.</p>
+<div class="quarto-embed-nb-cell">
+<div id="cell-fig-predicted-vs-actual-backtest" class="cell" data-execution_count="17">
+<div class="cell-output cell-output-display">
+<div id="fig-predicted-vs-actual-backtest" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-predicted-vs-actual-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<a href="index_files/figure-html/notebooks-data-screening-fig-predicted-vs-actual-backtest-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH"><img src="index_files/figure-html/notebooks-data-screening-fig-predicted-vs-actual-backtest-output-1.png" width="790" height="485" class="figure-img"></a>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-predicted-vs-actual-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>El análisis gráfico (Predichos vs Actuales) revela que el modelo captura de manera excelente la <strong>tendencia</strong> general de la serie, lo que implica que el modelo es eficiente a la hora de predecir los movimientos de largo plazo en la volatilidad. Sin embargo, un problema importante que surge es que el modelo tiende a suavizar los movimientos bruscos, especialmente en momentos donde la volatilidad sufre caídas o picos repentinos. Este fenómeno de <strong>sobre-suavización</strong> implica que el modelo no es completamente reactivo a los choques regresivos de gran magnitud, lo que puede deberse a la estructura propia del GARCH, la cual tiende a modelar la volatilidad alrededor de la media del periodo.</p>
+<p>El MAPE calculado para el conjunto de test arroja un valor elevado de <strong>739.70%</strong>, lo cual podría sugerir en un análisis superficial que el modelo no es adecuado. Sin embargo, es importante considerar el tipo de mercado con el que estamos trabajando, caracterizado por una volatilidad intrínsecamente elevada y movimientos extremos. En estos contextos, valores altos de MAPE son comunes debido a la alta variabilidad en los retornos, lo que no necesariamente implica una mala capacidad predictiva, sino que refleja la naturaleza errática de los datos financieros. En este sentido, el MAPE alto está más relacionado con la complejidad del mercado que con la falta de ajuste del modelo.</p>
+<p>El backtesting del modelo Zero-GARCH sobre la serie de retornos del IRP-GOBIX para el periodo de 2021 confirma que, si bien el modelo captura correctamente la tendencia general de la volatilidad, su capacidad para reaccionar ante movimientos abruptos es limitada. A pesar de esto, dado el contexto del mercado de deuda pública dominicano, la sobre-suavización en los niveles es un comportamiento esperado en modelos de volatilidad como el GARCH. En resumen, el modelo es útil para predecir tendencias a largo plazo, pero su precisión en niveles podría mejorarse si se ajusta para reaccionar mejor a eventos extremos.</p>
+</section>
+</section>
+<section id="discusión-y-conclusión" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Discusión y Conclusión</h1>
+<section id="discusión" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="discusión"><span class="header-section-number">6.1</span> Discusión</h2>
+<p>Este estudio ha permitido modelar los retornos y la volatilidad del mercado de deuda pública dominicano utilizando modelos ARIMA-GARCH. A pesar de los hallazgos significativos, existen algunas limitaciones que deben considerarse al interpretar los resultados:</p>
+<ul>
+<li><p><strong>Problemas con la sobre-suavización</strong>: Como se observó en el análisis retrospectivo, el modelo Zero-GARCH tiende a suavizar los movimientos bruscos en la volatilidad, lo que puede limitar su capacidad de capturar adecuadamente choques repentinos en el mercado. Aunque el modelo refleja bien la tendencia general, su capacidad de reacción frente a eventos extremos debe ser mejorada.</p></li>
+<li><p><strong>MAPE elevado</strong>: El MAPE obtenido durante la evaluación retrospectiva fue considerablemente alto. Si bien esto puede justificarse por la naturaleza volátil del mercado de deuda pública, sugiere que el modelo puede tener problemas para ajustarse a los movimientos de corto plazo. La alta volatilidad y los choques repentinos no fueron capturados con precisión, afectando el rendimiento del modelo.</p></li>
+<li><p><strong>Limitaciones en los datos</strong>: El análisis se centró en un período específico (2014-2021), excluyendo la pandemia debido a sus características atípicas. Si bien esto ayudó a evitar sesgos, la exclusión de este período crítico puede haber omitido dinámicas importantes del mercado en tiempos de crisis, limitando la generalización de los resultados.</p></li>
+</ul>
+</section>
+<section id="conclusión" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="conclusión"><span class="header-section-number">6.2</span> Conclusión</h2>
+<p>En conclusión, este estudio ha demostrado que el modelo ARIMA, aunque útil para capturar la estructura de los retornos del mercado de deuda pública dominicano, presenta limitaciones cuando se enfrenta a problemas de heterocedasticidad. El modelo Zero-GARCH, por su parte, ha demostrado ser más adecuado para describir la dinámica de la volatilidad, capturando fenómenos como la persistencia en la volatilidad y el clustering. Además, la capacidad del modelo para manejar eventos extremos a través de la distribución t de Student resulta valiosa en este tipo de mercados caracterizados por alta volatilidad y choques inesperados.</p>
+<p>Entre los principales hallazgos destacan:</p>
+<ul>
+<li><p><strong>Volatility clustering</strong>: El análisis confirmó la presencia de agrupación de volatilidad, donde periodos de baja volatilidad son seguidos por periodos de alta volatilidad, un fenómeno común en los mercados financieros.</p></li>
+<li><p><strong>Persistencia de la volatilidad</strong>: El coeficiente <span class="math inline">\(\beta_1\)</span> significativo en el modelo GARCH sugiere que los shocks en la volatilidad tienen un efecto prolongado en el tiempo, lo que es consistente con los patrones observados en mercados financieros emergentes como el dominicano.</p></li>
+<li><p><strong>Dificultad para capturar movimientos extremos</strong>: Aunque el modelo Zero-GARCH es efectivo en capturar la tendencia general, su capacidad para reaccionar ante cambios bruscos en la volatilidad sigue siendo limitada, lo cual es un área de mejora para futuras investigaciones.</p></li>
+<li><p><strong>Implicaciones para los inversores</strong>: Los resultados ofrecen una herramienta útil para la predicción de tendencias de volatilidad a largo plazo en el mercado de deuda pública dominicano, proporcionando una base para la toma de decisiones estratégicas en la gestión del riesgo.</p></li>
+</ul>
+<p>Este estudio no solo contribuye al entendimiento del comportamiento de los retornos y la volatilidad en el mercado de deuda pública dominicano.</p>
+</section>
+</section>
+<section id="referencias" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Referencias</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-adosafi_2024" class="csl-entry" role="listitem">
+ADOSAFI. 2024. <span>“Fondos de Inversión En República Dominicana.”</span> <a href="https://adosafi.org/wp-content/uploads/2024/05/04.-Boletin-Abril-2024.pdf" class="uri">https://adosafi.org/wp-content/uploads/2024/05/04.-Boletin-Abril-2024.pdf</a>.
+</div>
+<div id="ref-engle_garch101" class="csl-entry" role="listitem">
+Engle, Robert. n.d. <span>“GARCH 101: An Introduction to the Use of ARCH/GARCH Models in Applied Econometrics.”</span> <a href="https://web-static.stern.nyu.edu/rengle/GARCH101.PDF" class="uri">https://web-static.stern.nyu.edu/rengle/GARCH101.PDF</a>.
+</div>
+<div id="ref-engle_ng_1993" class="csl-entry" role="listitem">
+Engle, Robert F., and Victor Ng. 1993. <span>“Measuring and Testing the Impact of News on Volatility.”</span> <em>Journal of Finance</em> 48: 1749–78.
+</div>
+<div id="ref-fabozzi_fixed_income" class="csl-entry" role="listitem">
+Fabozzi, Frank J. n.d. <em>The Handbook of Fixed Income Securities</em>. McGraw-Hill.
+</div>
+<div id="ref-miah_rahman_2016" class="csl-entry" role="listitem">
+Miah, Mamun, and Azizur Rahman. 2016. <span>“Modelling Volatility of Daily Stock Returns: Is GARCH(1,1) Enough?”</span> <em>American Scientific Research Journal for Engineering, Technology, and Sciences</em> 18 (01): 29–39.
+</div>
+<div id="ref-oecd_2012" class="csl-entry" role="listitem">
+OECD. 2012. <em>El Mercado de Capitales En República Dominicana: Aprovechando Su Potencial Para El Desarrollo</em>. OECD Publishing.
+</div>
+<div id="ref-sanchez2024" class="csl-entry" role="listitem">
+Sánchez Arizaleta, Pablo. 2024. <span>“República Dominicana, El País Latinoamericano Que Avanza a Más Velocidad.”</span> <em>Global Affairs, Universidad de Navarra</em>. <a href="https://www.unav.edu/web/global-affairs/republica-dominicana-el-pais-latinoamericano-que-avanza-a-mas-velocidad">https://www.unav.edu/web/global-affairs/republica-dominicana-el-pais-latinoamericano-que-avanza-a-mas-velocidad</a>.
+</div>
+<div id="ref-sheppard_2021" class="csl-entry" role="listitem">
+Sheppard, Kevin. 2021. <span>“Bashtage/Arch: Release 4.18 (Version V4.18).”</span> Zenodo. <a href="https://doi.org/10.5281/zenodo.593254">https://doi.org/10.5281/zenodo.593254</a>.
+</div>
+</div>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{contreras2024,
+  author = {Contreras, Ian},
+  title = {Un Estudio Sobre Los Retornos Del Mercado de Renta Fija
+    Dominicano Utilizando Basados En Modelos {AR-GARCH}},
+  date = {2024-10-19},
+  langid = {en},
+  abstract = {Este estudio tiene como objetivo analizar los retornos y
+    la volatilidad del mercado de deuda pública dominicana mediante la
+    aplicación de modelos ARMA-GARCH. A través de estos modelos, se
+    busca identificar patrones en el comportamiento de los retornos y
+    predecir su evolución futura.}
+}
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-contreras2024" class="csl-entry quarto-appendix-citeas" role="listitem">
+Contreras, Ian. 2024. <span>“Un Estudio Sobre Los Retornos Del Mercado
+de Renta Fija Dominicano Utilizando Basados En Modelos AR-GARCH.”</span>
+Referencias. October 19, 2024.
+</div></div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","loop":false,"closeEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
