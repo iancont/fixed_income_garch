@@ -12,7 +12,7 @@ import os
 ```{python}
 # | label: irp
 print("Current Working Directory:", os.getcwd())
-df = pd.read_excel(r"..\\data\\inputs\\Historico del Indicador GOBIX DR.xlsx",
+df = pd.read_excel(r"..\\data\\inputs\\historico_gobix_dr.xlsx",
                    sheet_name="Indice Retorno Precio")
 df = df.rename(columns={'Fecha': 'date', 'Valor': 'irp'})
 df['date'] = pd.to_datetime(df['date'])
