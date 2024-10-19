@@ -249,7 +249,13 @@ La comparación entre los residuos estandarizados y los residuos de varianza uni
 
 ## Evaluación Retrospectiva (Backtesting)
 
+Para evaluar la capacidad predictiva del modelo Zero-GARCH, se realizó un análisis de backtesting sobre el periodo comprendido durante el año 2021. Se emplearon dos métodos principales de evaluación: el MAPE (Mean Absolute Percentage Error) y el análisis gráfico de los valores predichos frente a los valores actuales de la desviación estándar móvil. 
 
+El análisis gráfico (Predichos vs Actuales) revela que el modelo captura de manera excelente la **tendencia** general de la serie, lo que implica que el modelo es eficiente a la hora de predecir los movimientos de largo plazo en la volatilidad. Sin embargo, un problema importante que surge es que el modelo tiende a suavizar los movimientos bruscos, especialmente en momentos donde la volatilidad sufre caídas o picos repentinos. Este fenómeno de **sobre-suavización** implica que el modelo no es completamente reactivo a los choques regresivos de gran magnitud, lo que puede deberse a la estructura propia del GARCH, la cual tiende a modelar la volatilidad alrededor de la media del periodo. 
+
+El MAPE calculado para el conjunto de test arroja un valor elevado de **739.70%**, lo cual podría sugerir en un análisis superficial que el modelo no es adecuado. Sin embargo, es importante considerar el tipo de mercado con el que estamos trabajando, caracterizado por una volatilidad intrínsecamente elevada y movimientos extremos. En estos contextos, valores altos de MAPE son comunes debido a la alta variabilidad en los retornos, lo que no necesariamente implica una mala capacidad predictiva, sino que refleja la naturaleza errática de los datos financieros. En este sentido, el MAPE alto está más relacionado con la complejidad del mercado que con la falta de ajuste del modelo.
+
+El backtesting del modelo Zero-GARCH sobre la serie de retornos del IRP-GOBIX para el periodo de 2021 confirma que, si bien el modelo captura correctamente la tendencia general de la volatilidad, su capacidad para reaccionar ante movimientos abruptos es limitada. A pesar de esto, dado el contexto del mercado de deuda pública dominicano, la sobre-suavización en los niveles es un comportamiento esperado en modelos de volatilidad como el GARCH. En resumen, el modelo es útil para predecir tendencias a largo plazo, pero su precisión en niveles podría mejorarse si se ajusta para reaccionar mejor a eventos extremos.
 
 # Discusión
 
