@@ -9,9 +9,15 @@ format:
     toc: true
     comments:
       hypothesis: true
+  elsevier-pdf:
+    journal:
+      name: Journal Name
+      formatting: preprint
+      model: 3p
+      layout: onecolumn
+      cite-style: number
   docx: default
   jats: default
-  agu-pdf: default
 
 
 
