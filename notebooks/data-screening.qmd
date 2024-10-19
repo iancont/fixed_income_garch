@@ -48,7 +48,7 @@ plt.show()
 
 ### Análisis descriptivo de la muestra
 ```{python}
-# | label: return-descriptive-table
+# | label: table-descriptive-stats-return
 # | fig-cap: Tabla de las estadísticas descriptiva de la serie de retornos
 desc_stats = returns.describe()
 

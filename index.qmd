@@ -21,7 +21,7 @@ citation:
 number-sections: true
 ---
 
-## Introducción
+# Introducción
 
 La República Dominicana es el país latinoamericano que más ha crecido en los últimos cincuenta años, acompañado de un subsecuente aumento en la complejidad económica [@sanchez2024]. En un contexto de creciente globalización e internacionalización financiera, el mercado de renta fija, en especial el de la deuda pública juega un papel principal. Este se ha vuelto la clase de activo principal para fondos de pensiones como para fondos de inversion.  A pesar de este progreso, persisten desafíos estructurales como la baja liquidez en el mercado secundario y alta volatilidad. 
 
@@ -51,12 +51,12 @@ $$ {#eq: garch}
 
 El modelo GARCH, propuesto por Bollerslev, atribuye la volatilidad actual tanto a la volatilidad de momentos pasados como a los errores de momentos pasados, lo que le permite explicar el fenómeno de agrupación en la volatilidad de los rendimientos financieros.
 
-## Datos
+# Datos
 
-### Fuente de datos
-Un Índice Financiero es una medida estadística que refleja el valor de un conjunto de activos financieros agrupados de acuerdo con ciertos criterios.Estos se utilizan como objetivo de rendimiento de portafolios, referencias sobre las características retorno/riesgo de una clase de activo y como referencia para productos anclados a índices. (Bloomberg, 2023)
+## Fuente de datos
+Un Índice Financiero es una medida estadística que refleja el valor de un conjunto de activos financieros agrupados de acuerdo con ciertos criterios.Estos se utilizan como objetivo de rendimiento de portafolios, referencias sobre las características retorno/riesgo de una clase de activo y como referencia para productos anclados a índices.
 
-En el mercado de renta fija de la República Dominicana, el único índice público es el GOBIX, que representa la deuda gubernamental consolidada en peso. Este índice está compuesto por títulos emitidos localmente por el Banco Central y el Ministerio de Hacienda, y se publica en dos modalidades: índice de precio limpio e índice de retorno-precio. Para este estudio, se utilizará el índice de retorno precio @retorno-precio, ya que aisla el componente de retorno de mercado el cual es el objetivo de estudio. 
+En el mercado de renta fija de la República Dominicana, el único índice público es el GOBIX, que representa la deuda gubernamental consolidada en peso. Este índice está compuesto por títulos emitidos localmente por el Banco Central y el Ministerio de Hacienda, y se publica en dos modalidades: índice de precio limpio e índice de retorno-precio. Para este estudio, se utilizará el índice de retorno precio @sec-retorno-precio, ya que aisla el componente de retorno de mercado el cual es el objetivo de estudio. 
 
 El GOBIX se caracteriza por los siguientes criterios:
 
@@ -66,7 +66,7 @@ El GOBIX se caracteriza por los siguientes criterios:
 - **Rebalanceo**: Se efectúa un rebalanceo mensual para ajustar el índice según la disponibilidad de inversión en los bonos.
 - **Fuentes de información**: Los datos provienen de la Bolsa de Valores de la República Dominicana y la Proveedora de Precios.
 
-### Índice de Retorno-Precio {#retorno-precio}
+## Índice de Retorno-Precio {#sec-retorno-precio}
 
 El índice de retorno-precio es una metodología utilizada para calcular el rendimiento de un índice de renta fija, centrándose exclusivamente en las variaciones del precio limpio de los títulos, sin tener en cuenta los intereses acumulados ni el pago de cupones durante el período de cálculo. En el contexto del GOBIX, este índice refleja las fluctuaciones en los precios de los bonos dominicanos debido a las variaciones en las tasas de interés del mercado.
 
@@ -88,51 +88,63 @@ El índice de retorno-precio es una metodología utilizada para calcular el rend
 
 El retorno-precio del índice ($RPI_t$) se calcula como la suma ponderada del retorno-precio de cada bono ($RPI_{i,t}$), donde la ponderación ($\omega_i$) se determina según la capitalización de mercado de cada bono.
 
-### Selección de muestra de entrenamiento/prueba {#sec-test-train}
+En este análisis, expresaremos la serie de retornos en puntos básicos para evitar problemas de escalamiento de los datos y posibles desbordamientos decimales (overflow decimal), que pueden ocurrir cuando se manejan fluctuaciones muy pequeñas con alta precisión. Un punto básico equivale a 0.01% o 1/100 de un porcentaje. Este enfoque nos permitirá manejar los datos con mayor estabilidad y evitar posibles errores numéricos derivados del escalamiento inapropiado. No tiene efectos estadísticos en las distribución. 
 
-Para este estudio, se analizarán datos comprendidos entre 2014 y 2024. La metodología empleada para dividir el conjunto de datos en muestras de entrenamiento y prueba será el **Time Series Cross-Validator**. A diferencia de la validación cruzada tradicional, que aleatoriza los datos, esta técnica respeta el orden temporal, lo cual es crucial en el análisis de series de tiempo.
+## Selección de muestra de entrenamiento/prueba {#sec-test-train}
+
+Durante la pandemia, se experimentó uno de los ciclos de tasas de interés más pronunciados de las últimas décadas. Este periodo presentó características estructurales distintas en comparación con los ciclos históricos previos. Para evitar sesgos en las estimaciones debido a la alta volatilidad observada durante ese tiempo, evaluaremos únicamente la serie de retornos entre el periodo 2014-2021, que se considera un ciclo de tasas más regular.
+
+La metodología empleada para dividir el conjunto de datos en muestras de entrenamiento y prueba será el **Time Series Cross-Validator**. A diferencia de la validación cruzada tradicional, que aleatoriza los datos, esta técnica respeta el orden temporal, lo cual es crucial en el análisis de series de tiempo.
 
 En cada partición (k-ésimo split), la técnica funciona de la siguiente manera:
 
 - **Conjunto de Entrenamiento**: Incluye los primeros *k* pliegues (folds).
 - **Conjunto de Prueba**: Incluye el pliegue *(k+1)*.
 
-Es importante destacar que los conjuntos de prueba siempre contienen datos posteriores a los utilizados en los conjuntos de entrenamiento, lo que asegura que el modelo sea evaluado utilizando datos futuros.
+# Análisis Exploratorio. {#sec-eda}
 
-## Análisis Exploratorio. {#sec-eda}
+{{< embed notebooks/data-screening.qmd#fig-price-return-series >}}
 
-La gráfica de retornos diarios del IRP-GOBIX muestra baja volatilidad entre 2015 y 2022, con retornos generalmente dentro de un rango de ±2.5%. A partir de 2022, se observa un fuerte incremento en la volatilidad, alcanzando picos de más del 12% en 2023. Este comportamiento refleja un fenómeno de **"volatility clustering"**, donde períodos de baja volatilidad son seguidos por fases de alta volatilidad. Los choques recientes pueden estar relacionados con factores externos como cambios en tasas de interés o incertidumbre macroeconómica. Esto subraya la importancia de aplicar modelos ARMA-GARCH para capturar la dinámica y prever el comportamiento futuro del mercado de deuda pública dominicana.
+La gráfica de retornos diarios del IRP-GOBIX muestra baja volatilidad entre 2015 y 2022, con retornos generalmente dentro de un rango de ±50 puntos básicos. En varios periodos, se observa un fuerte incremento en la volatilidad, alcanzando picos de 200 básicos en el ciclo de tasas de 2018. Este comportamiento refleja un fenómeno de **"volatility clustering"**, donde períodos de baja volatilidad son seguidos por fases de alta volatilidad. Los choques recientes pueden estar relacionados con factores externos como cambios en tasas de interés o incertidumbre macroeconómica. Esto subraya la importancia de aplicar modelos ARMA-GARCH para capturar la dinámica y prever el comportamiento futuro del mercado de deuda pública dominicana. Estos fenómenos de volatility clustering se visualizan solapados con cambios de tendencia en los ciclos de tasas. 
 
-### Análisis descriptivo de la muestra {#sec-estadistica-descriptiva}
+## Análisis descriptivo de la muestra {#sec-estadistica-descriptiva}
 
-La tabla de análisis descriptivo de los retornos muestra información clave sobre la distribución de la serie de tiempo de rendimientos. Con 2,646 observaciones, la media de los retornos es cercana a cero (0.00007), lo que indica que, en promedio, los rendimientos son prácticamente nulos. La mediana de -0.000041 es también cercana a cero, sugiriendo una distribución ligeramente sesgada hacia valores negativos. La desviación estándar de 0.004995 indica una moderada dispersión alrededor de la media, lo que refleja cierta volatilidad en los rendimientos. El valor de asimetría (9.19) sugiere una fuerte asimetría positiva, lo que significa que la serie tiene una cola larga hacia la derecha, lo cual es típico de datos con eventos extremos. La kurtosis (246.75) indica que la distribución es leptocúrtica, con una mayor concentración de valores alrededor de la media y colas más pesadas que una distribución normal. El test de Jarque-Bera arroja un valor extremadamente alto (6.72 millones), acompañado de una probabilidad de 0.0, lo que indica que la serie no sigue una distribución normal, confirmando la presencia de asimetría y colas pesadas.
+<!-- {{< embed notebooks/data-screening.qmd#table-descriptive-stats-return >}} -->
+
+La tabla de análisis descriptivo actualizada de los retornos muestra información clave sobre la distribución de la serie temporal de rendimientos. Con 1,941 observaciones, la **media** de los retornos es de $1.353251$ lo que indica un rendimiento positivo promedio. Sin embargo, la **mediana** de $-0.3180444$ sugiere que la distribución está ligeramente sesgada hacia valores negativos. La **desviación estándar** de $23.502911$ revela una amplia dispersión alrededor de la media, lo que refleja una elevada volatilidad en los rendimientos, significativamente mayor en comparación con la media.
+
+El **valor de asimetría** ($0.70527$) sugiere una leve **asimetría positiva**, lo que indica que la serie tiene una ligera inclinación hacia valores extremos en la cola derecha. La **kurtosis** de **7.587995** sugiere que la distribución es **leptocúrtica**, lo que implica una mayor concentración de valores alrededor de la media y colas más pesadas que una distribución normal, lo que es común en datos financieros que presentan eventos extremos.
+
+El **test de Jarque-Bera**, con un valor de $4,789.532331$ confirma que la serie no sigue una distribución normal, validando la presencia de asimetría y colas pesadas en la distribución de los rendimientos. Esto refuerza la necesidad de utilizar modelos que puedan capturar adecuadamente estos comportamientos no lineales y la alta volatilidad del mercado.
+
+{{< embed notebooks/data-screening.qmd#fig-distribution-fitting >}}
 
 La gráfica muestra el ajuste de tres distribuciones (Normal, Lognormal y t de Student) a los retornos de precio del índice GOBIX. La distribución empírica (en azul) tiene una forma altamente concentrada en torno a cero, con colas más gruesas que lo que se esperaría bajo una distribución normal. El ajuste de la distribución t de Student (en rojo) parece capturar mejor los valores extremos, con colas más largas y una mayor concentración en el centro, lo que es típico en series financieras con episodios de alta volatilidad. Por otro lado, tanto la distribución normal (en naranja) como la lognormal (en verde) subestiman las colas de la distribución empírica, lo que indica que no son capaces de capturar adecuadamente los valores atípicos presentes en los datos. Esto refuerza la idea de que la distribución t de Student es una mejor candireturns para modelar los retornos, dada su flexibilidad para ajustarse a la leptocurtosis (colas gruesas y alta concentración alrededor de la media).
 
+{{< embed notebooks/data-screening.qmd#fig-tqq-plot >}}
+
 La gráfica Q-Q (Quantile-Quantile) compara los cuantiles teóricos de una distribución t de Student con los cuantiles observados de la serie de retornos de precios del índice GOBIX. En general, la mayoría de los puntos se alinean con la línea roja, lo que sugiere que los retornos de precios siguen razonablemente bien una distribución t de Student, especialmente en las partes centrales de la distribución.`
 
-El estadístico de Kolmogorov-Smirnov es de $0.0375$, con un p-valor de $0.00116$, lo que indica que, aunque la distribución t de Student captura la mayor parte de los retornos, no es un ajuste perfecto. Este resultado sugiere que hay discrepancias entre la distribución teórica y los datos reales, especialmente en las colas de la distribución, donde se observan valores extremos.
+El estadístico de Kolmogorov-Smirnov es de $0.0286$, con un p-valor de $0.0827$, lo que indica que, aunque la distribución t de Student captura gran parte de los retornos, no es un ajuste perfecto. Este resultado sugiere que existen discrepancias entre la distribución teórica y los datos reales, particularmente en las colas de la distribución, donde se observan valores extremos. 
 
-Los outliers en las colas (tanto en la derecha como en la izquierda) reflejan eventos extremos que no son completamente capturados por la distribución t de Student. Estos valores atípicos no son simplemente anomalías, sino que pueden explicarse claramente por los efectos del ciclo de tasas de interés extremas que se vivió durante la pandemia de COVID-19. Durante ese período, las tasas de interés fluctuaron drásticamente en respuesta a las políticas económicas de emergencia y la elevada incertidumbre en los mercados, lo que provocó cambios bruscos en los precios de los bonos y, por lo tanto, generó estos valores atípicos.
+## Test de estacionariedad/robustez {#sec-estacionariedad}
 
-### Test de estacionariedad/robustez {#sec-estacionariedad}
+El test de Dickey-Fuller aumentado (ADF) se utilizó para evaluar la estacionariedad de la serie de retornos, un requisito fundamental para la estimación de modelos ARMA y GARCH. Los resultados obtenidos muestran un **ADF Statistic** de $-13.1741$ y un **p-valor** de $1.2333 \times 10^{-24}$, lo que permite rechazar la hipótesis nula de raíz unitaria al nivel de significancia del 5%. Esto confirma que la serie de retornos es estacionaria, es decir, no presenta una tendencia significativa y sus fluctuaciones se distribuyen alrededor de una media constante a lo largo del tiempo. Estos resultados son consistentes con el comportamiento típico de las series de retornos financieros, lo que habilita la estimación adecuada de modelos ARMA-GARCH sobre la serie.
 
-El test de Dickey-Fuller aumentado (ADF) se utilizó para evaluar la estacionariedad de la serie de retornos, un requisito fundamental para la estimación de modelos ARMA y GARCH. Los resultados obtenidos muestran un ADF Statistic de -12.726 y un p-valor de 9.598e-24, lo que permite rechazar la hipótesis nula de raíz unitaria al nivel de significancia del 5%. Esto confirma que la serie de retornos es estacionaria, es decir, no presenta tendencia significativa y sus fluctuaciones se distribuyen alrededor de una media constante a lo largo del tiempo. Estos resultados son consistentes con el comportamiento típico de las series de retornos financieros, lo que habilita la estimación adecuada de modelos ARMA-GARCH sobre la serie.
+## Test de autocorrelación {#sec-autocorrelacion}
 
-### Test de autocorrelación {#sec-autocorrelacion}
+{{< embed notebooks/data-screening.qmd#fig-acf-pacf >}}
 
 El gráfico de la Función de Autocorrelación (ACF) muestra un pico significativo en el primer rezago, seguido por valores cercanos a cero para los rezagos posteriores. Este comportamiento sugiere la presencia de un modelo MA(1), ya que la ACF muestra un solo pico significativo y los siguientes rezagos no presentan autocorrelación. Esto indica que el proceso puede tener una estructura de media móvil de primer orden, donde los choques aleatorios solo tienen un impacto significativo en el primer rezago.
 
 En cuanto a la Función de Autocorrelación Parcial (PACF), también se observa un comportamiento similar: un pico en el primer rezago y valores prácticamente nulos a partir del segundo rezago. Según la metodología de Box-Jenkins, esto refuerza la idea de que un modelo MA(1) sería adecuado, ya que la PACF no presenta la decaída característica de un proceso autoregresivo (AR) y, en cambio, muestra un comportamiento puntual.
 
-## Resultados 
+# Resultados 
 
-#### Representacion matematica del modelo  AR-GARCH(1,1)
-
-
+## Representacion matematica del modelo  AR-GARCH(1,1)
 
 <!-- No giher order garch models outperform the garch (1,1) when it comes to variance of markets returns -->
-### Evaluación Retrospectiva (Backtesting)
+## Evaluación Retrospectiva (Backtesting)
 
 ## Discusión
 
