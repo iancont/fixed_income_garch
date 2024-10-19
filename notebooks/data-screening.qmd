@@ -9,22 +9,32 @@ authors: Ian Contreras
 ### Librerías
 ```{python}
 # | label: importing-libraries
+# Manejo de datos y análisis
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.ticker import PercentFormatter
 import pandas as pd
-import statsmodels.api as sm
 import scipy.stats as stats
+
+# Modelos estadísticos y econométricos
+import statsmodels.api as sm
 from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 from statsmodels.tsa.stattools import adfuller
 from pmdarima.arima import auto_arima
 from arch import arch_model
+
+# Visualización
+import matplotlib.pyplot as plt
+
+# Presentación en IPython
+from IPython.display import Markdown, HTML
 ```
 
 ### Data
 ```{python}
 # | label: importing-data
-df = pd.read_csv(r'..\data\csv\irp.csv', parse_dates=['date'], index_col='date')
+df = pd.read_csv(r'..\data\csv\irp.csv', parse_dates=[
+                 'date'], index_col='date')
+# df = pd.read_csv(r'.\data\csv\irp.csv', parse_dates=[
+#                  'date'], index_col='date')
 returns = df['price_return']
 split_date = '2020-12-31'
 R_test = df[df.index >= split_date]['price_return'].rolling(
@@ -45,10 +55,10 @@ ax.legend()
 plt.show()
 ```
 
-
 ### Análisis descriptivo de la muestra
 ```{python}
-# | label: table-descriptive-stats-return
+# | label: tbl-return-descriptive-stats
+# | output: asis
 # | fig-cap: Tabla de las estadísticas descriptiva de la serie de retornos
 desc_stats = returns.describe()
 
@@ -66,7 +76,7 @@ descriptive_table = pd.DataFrame({
     'Jarque-Bera': [jb_test[0]],
     'Prob.': [jb_test[1]]
 })
-descriptive_table
+Markdown(descriptive_table.to_markdown(index=False))
 ```
 
 ### Ajuste de distribuciones
@@ -153,7 +163,7 @@ res = ar.fit(last_obs=split_date)
 ```{python}
 # | label: garch-model
 # | fig-cap: Modelo Zero-Garch de la serie de retornos
-res.summary()
+HTML(res.summary().as_html())
 ```
 
 ### Residuos del AR-GARCH
