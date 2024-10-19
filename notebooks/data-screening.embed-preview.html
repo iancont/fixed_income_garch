@@ -5,7 +5,6 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-    <meta name="description" content="Visualización y análisis estadístico del feature dataset">
 
     <title>Data Screening</title>
     <style>
@@ -19,6 +18,40 @@
         width: 0.8em;
         margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
         vertical-align: middle;
+      }
+      /* CSS for syntax highlighting */
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
       }
     </style>
 
@@ -133,10 +166,7 @@
   });
 </script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
 
-
-
-<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
-  
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>  
       </head>
 
   <body class="quarto-notebook">
@@ -160,12 +190,6 @@
         
         <div class="quarto-title-meta">
 
-                <div>
-            <div class="quarto-title-meta-heading">Author</div>
-            <div class="quarto-title-meta-contents">
-                        <p>Ian Contreras </p>
-                      </div>
-          </div>
                 
           
                 
@@ -193,27 +217,27 @@
   <li><a href="#análisis-exploratorio." id="toc-análisis-exploratorio." class="nav-link" data-scroll-target="#análisis-exploratorio.">Análisis Exploratorio.</a>
   <ul class="collapse">
   <li><a href="#serie-histórica" id="toc-serie-histórica" class="nav-link" data-scroll-target="#serie-histórica">Serie Histórica</a></li>
-  </ul></li>
   <li><a href="#análisis-descriptivo-de-la-muestra" id="toc-análisis-descriptivo-de-la-muestra" class="nav-link" data-scroll-target="#análisis-descriptivo-de-la-muestra">Análisis descriptivo de la muestra</a></li>
   <li><a href="#ajuste-de-distribuciones" id="toc-ajuste-de-distribuciones" class="nav-link" data-scroll-target="#ajuste-de-distribuciones">Ajuste de distribuciones</a></li>
   <li><a href="#q-q-plot-con-respecto-a-distribución-t" id="toc-q-q-plot-con-respecto-a-distribución-t" class="nav-link" data-scroll-target="#q-q-plot-con-respecto-a-distribución-t">Q-Q plot con respecto a distribución t</a></li>
   <li><a href="#kolmorov-smirnov-test-para-distribución-t" id="toc-kolmorov-smirnov-test-para-distribución-t" class="nav-link" data-scroll-target="#kolmorov-smirnov-test-para-distribución-t">Kolmorov Smirnov test para distribución t</a></li>
   <li><a href="#test-de-estacionariedad-robustez" id="toc-test-de-estacionariedad-robustez" class="nav-link" data-scroll-target="#test-de-estacionariedad-robustez">Test de estacionariedad/ robustez</a></li>
   <li><a href="#test-de-autocorrelación" id="toc-test-de-autocorrelación" class="nav-link" data-scroll-target="#test-de-autocorrelación">Test de autocorrelación</a></li>
+  </ul></li>
   <li><a href="#resultados" id="toc-resultados" class="nav-link" data-scroll-target="#resultados">Resultados</a>
   <ul class="collapse">
   <li><a href="#estimación-del-modelo-arima" id="toc-estimación-del-modelo-arima" class="nav-link" data-scroll-target="#estimación-del-modelo-arima">Estimación del modelo ARIMA</a></li>
-  </ul></li>
   <li><a href="#estimación-del-ar-garch" id="toc-estimación-del-ar-garch" class="nav-link" data-scroll-target="#estimación-del-ar-garch">Estimación del AR-GARCH</a></li>
   <li><a href="#resultados-del-ar-garch" id="toc-resultados-del-ar-garch" class="nav-link" data-scroll-target="#resultados-del-ar-garch">Resultados del AR-GARCH</a></li>
   <li><a href="#residuos-del-ar-garch" id="toc-residuos-del-ar-garch" class="nav-link" data-scroll-target="#residuos-del-ar-garch">Residuos del AR-GARCH</a></li>
   <li><a href="#residuos-contra-volatilidad-condicional" id="toc-residuos-contra-volatilidad-condicional" class="nav-link" data-scroll-target="#residuos-contra-volatilidad-condicional">Residuos contra volatilidad condicional</a></li>
+  </ul></li>
   <li><a href="#evaluación-retrospectiva-backtesting" id="toc-evaluación-retrospectiva-backtesting" class="nav-link" data-scroll-target="#evaluación-retrospectiva-backtesting">Evaluación Retrospectiva (Backtesting)</a>
   <ul class="collapse">
   <li><a href="#conversion-de-varianza-predicha." id="toc-conversion-de-varianza-predicha." class="nav-link" data-scroll-target="#conversion-de-varianza-predicha.">Conversion de varianza predicha.</a></li>
-  </ul></li>
   <li><a href="#mape-del-modelo" id="toc-mape-del-modelo" class="nav-link" data-scroll-target="#mape-del-modelo">MAPE del modelo</a></li>
   <li><a href="#predichos-vs-actuales-plot-backtested" id="toc-predichos-vs-actuales-plot-backtested" class="nav-link" data-scroll-target="#predichos-vs-actuales-plot-backtested">Predichos vs Actuales Plot-Backtested</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -221,65 +245,56 @@
 </div>
 <main class="content quarto-banner-title-block" id="quarto-document-content">      
 
-       <section id="importaciones" class="level2">
+       <p>Ian Contreras</p>
+<section id="importaciones" class="level2">
 <h2 class="anchored" data-anchor-id="importaciones">Importaciones</h2>
 <section id="librerías" class="level3">
 <h3 class="anchored" data-anchor-id="librerías">Librerías</h3>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="importing-libraries" class="cell" data-execution_count="1">
-<pre><code>#| label: importing-libraries
-# Manejo de datos y análisis
-import numpy as np
-import pandas as pd
-import scipy.stats as stats
-
-# Modelos estadísticos y econométricos
-import statsmodels.api as sm
-from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
-from statsmodels.tsa.stattools import adfuller
-from pmdarima.arima import auto_arima
-from arch import arch_model
-
-# Visualización
-import matplotlib.pyplot as plt
-
-# Presentación en IPython
-from IPython.display import Markdown, HTML</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="importing-libraries" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Manejo de datos y análisis</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> stats</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Modelos estadísticos y econométricos</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.graphics.tsaplots <span class="im">import</span> plot_acf, plot_pacf</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.tsa.stattools <span class="im">import</span> adfuller</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pmdarima.arima <span class="im">import</span> auto_arima</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> arch <span class="im">import</span> arch_model</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualización</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Presentación en IPython</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Markdown, HTML</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 </section>
-<div id="9b47bf8d" class="cell markdown">
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="importing-data" class="cell" data-execution_count="2">
-<pre><code>#| label: importing-data
-df = pd.read_csv(r'..\data\csv\irp.csv', parse_dates=[
-                 'date'], index_col='date')
-# df = pd.read_csv(r'.\data\csv\irp.csv', parse_dates=[
-#                  'date'], index_col='date')
-returns = df['price_return']
-split_date = '2020-12-31'
-R_test = df[df.index &gt;= split_date]['price_return'].rolling(
-    window=5).std().dropna()</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="importing-data" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="vs">r'..\data\csv\irp.csv'</span>, parse_dates<span class="op">=</span>[</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 <span class="st">'date'</span>], index_col<span class="op">=</span><span class="st">'date'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># df = pd.read_csv(r'.\data\csv\irp.csv', parse_dates=[</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                  'date'], index_col='date')</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>returns <span class="op">=</span> df[<span class="st">'price_return'</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>split_date <span class="op">=</span> <span class="st">'2020-12-31'</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>R_test <span class="op">=</span> df[df.index <span class="op">&gt;=</span> split_date][<span class="st">'price_return'</span>].rolling(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    window<span class="op">=</span><span class="dv">5</span>).std().dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 </section>
-<div id="697d9ee0" class="cell markdown">
+</section>
 <section id="análisis-exploratorio." class="level2">
 <h2 class="anchored" data-anchor-id="análisis-exploratorio.">Análisis Exploratorio.</h2>
 <section id="serie-histórica" class="level3">
 <h3 class="anchored" data-anchor-id="serie-histórica">Serie Histórica</h3>
-</section>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-fig-price-return-series" class="cell" data-execution_count="3">
-<pre><code>#| label: fig-price-return-series
-#| fig-cap: Serie de retornos diarios IRP-GOBIX.
-fig, ax = plt.subplots(figsize=(12, 10))
-ax.plot(df.index, df['price_return'])
-ax.set_ylabel('Retorno Precio (BPS)')
-ax.set_xlim([df.index.min(), df.index.max()])
-ax.legend()
-plt.show()</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-fig-price-return-series" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>ax.plot(df.index, df[<span class="st">'price_return'</span>])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'Retorno Precio (BPS)'</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([df.index.<span class="bu">min</span>(), df.index.<span class="bu">max</span>()])</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.</code></pre>
 </div>
@@ -287,403 +302,161 @@ plt.show()</code></pre>
 <div id="fig-price-return-series" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-price-return-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="data-screening_files/figure-html/fig-price-return-series-output-2.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Serie de retornos diarios IRP-GOBIX."><img src="data-screening_files/figure-html/fig-price-return-series-output-2.svg" class="img-fluid figure-img"></a>
+<a href="data-screening.embed_files/figure-html/fig-price-return-series-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX."><img src="data-screening.embed_files/figure-html/fig-price-return-series-output-2.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-price-return-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Serie de retornos diarios IRP-GOBIX.
+Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX.
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
-<div id="d7104774" class="cell markdown">
+</section>
 <section id="análisis-descriptivo-de-la-muestra" class="level3">
 <h3 class="anchored" data-anchor-id="análisis-descriptivo-de-la-muestra">Análisis descriptivo de la muestra</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-return-descriptive-stats" class="cell" data-execution_count="4">
-<pre><code>#| label: return-descriptive-stats
-#| fig-cap: Tabla de las estadísticas descriptiva de la serie de retornos
-desc_stats = returns.describe()
-
-skewness = returns.skew()
-kurtosis = returns.kurtosis()
-jb_test = sm.stats.jarque_bera(returns)
-
-descriptive_table = pd.DataFrame({
-    'Observations': [int(desc_stats['count'])],
-    'Mean': [desc_stats['mean']],
-    'Median': [desc_stats['50%']],
-    'Std. Dev': [desc_stats['std']],
-    'Skewness': [skewness],
-    'Kurtosis': [kurtosis],
-    'Jarque-Bera': [jb_test[0]],
-    'Prob.': [jb_test[1]]
-})
-Markdown(descriptive_table.to_markdown(index=False))</code></pre>
-<div id="return-descriptive-stats" class="cell-output cell-output-display cell-output-markdown" data-execution_count="4">
-<table class="caption-top table table-sm table-striped small">
-<colgroup>
-<col style="width: 16%">
-<col style="width: 9%">
-<col style="width: 11%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 15%">
-<col style="width: 9%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: right;">Observations</th>
-<th style="text-align: right;">Mean</th>
-<th style="text-align: right;">Median</th>
-<th style="text-align: right;">Std. Dev</th>
-<th style="text-align: right;">Skewness</th>
-<th style="text-align: right;">Kurtosis</th>
-<th style="text-align: right;">Jarque-Bera</th>
-<th style="text-align: right;">Prob.</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: right;">1941</td>
-<td style="text-align: right;">1.35325</td>
-<td style="text-align: right;">-0.318044</td>
-<td style="text-align: right;">23.5029</td>
-<td style="text-align: right;">0.70527</td>
-<td style="text-align: right;">7.588</td>
-<td style="text-align: right;">4789.53</td>
-<td style="text-align: right;">0</td>
-</tr>
-</tbody>
-</table>
-<p>Tabla de las estadísticas descriptiva de la serie de retornos</p>
-</div>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="return-descriptive-stats" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>desc_stats <span class="op">=</span> returns.describe()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>skewness <span class="op">=</span> returns.skew()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>kurtosis <span class="op">=</span> returns.kurtosis()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>jb_test <span class="op">=</span> sm.stats.jarque_bera(returns)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>descriptive_table <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Observations'</span>: [<span class="bu">int</span>(desc_stats[<span class="st">'count'</span>])],</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Mean'</span>: [desc_stats[<span class="st">'mean'</span>]],</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Median'</span>: [desc_stats[<span class="st">'50%'</span>]],</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Std. Dev'</span>: [desc_stats[<span class="st">'std'</span>]],</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Skewness'</span>: [skewness],</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Kurtosis'</span>: [kurtosis],</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Jarque-Bera'</span>: [jb_test[<span class="dv">0</span>]],</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Prob.'</span>: [jb_test[<span class="dv">1</span>]]</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>Markdown(descriptive_table.to_markdown(index<span class="op">=</span><span class="va">False</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
-<div id="2e2383d2" class="cell markdown">
+</section>
 <section id="ajuste-de-distribuciones" class="level3">
 <h3 class="anchored" data-anchor-id="ajuste-de-distribuciones">Ajuste de distribuciones</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-fig-distribution-fitting" class="cell" data-execution_count="5">
-<pre><code>#| label: fig-distribution-fitting
-#| fig-cap: Ajuste de distribuciones a los retornos de precio.
-distributions = [stats.norm, stats.t]
-
-plt.figure(figsize=(10, 6))
-plt.hist(returns, bins=50, density=True, alpha=0.6, label='Resultados Empíricos')
-
-for dist in distributions:
-    params = dist.fit(returns)
-    x = np.linspace(returns.min(), returns.max(), 100)
-    plt.plot(x, dist.pdf(x, *params), label=f'{dist.name} fit')
-
-plt.xlabel('Retorno Precio (BPS)')
-plt.ylabel('Verosimilitud')
-plt.legend()
-plt.show()</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-distribution-fitting" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>distributions <span class="op">=</span> [stats.norm, stats.t]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.hist(returns, bins<span class="op">=</span><span class="dv">50</span>, density<span class="op">=</span><span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.6</span>, label<span class="op">=</span><span class="st">'Resultados Empíricos'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> dist <span class="kw">in</span> distributions:</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> dist.fit(returns)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> np.linspace(returns.<span class="bu">min</span>(), returns.<span class="bu">max</span>(), <span class="dv">100</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    plt.plot(x, dist.pdf(x, <span class="op">*</span>params), label<span class="op">=</span><span class="ss">f'</span><span class="sc">{</span>dist<span class="sc">.</span>name<span class="sc">}</span><span class="ss"> fit'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Retorno Precio (BPS)'</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Verosimilitud'</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-distribution-fitting" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-distribution-fitting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="data-screening_files/figure-html/fig-distribution-fitting-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Ajuste de distribuciones a los retornos de precio."><img src="data-screening_files/figure-html/fig-distribution-fitting-output-1.svg" class="img-fluid figure-img"></a>
+<a href="data-screening.embed_files/figure-html/fig-distribution-fitting-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Ajuste de distribuciones a los retornos de precio."><img src="data-screening.embed_files/figure-html/fig-distribution-fitting-output-1.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-distribution-fitting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Ajuste de distribuciones a los retornos de precio.
+Figure&nbsp;2: Ajuste de distribuciones a los retornos de precio.
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
-<div id="16dd16ac" class="cell markdown">
+</section>
 <section id="q-q-plot-con-respecto-a-distribución-t" class="level3">
 <h3 class="anchored" data-anchor-id="q-q-plot-con-respecto-a-distribución-t">Q-Q plot con respecto a distribución t</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-tqq-plot" class="cell" data-execution_count="6">
-<pre><code>#| label: fig-tqq-plot
-#| fig-cap: Q-Q Plot de retornos de precio contra la distribución t.
-t_params = stats.t.fit(returns)
-
-fig, ax = plt.subplots(figsize=(12, 10))
-stats.probplot(returns, dist="t", sparams=t_params, plot=plt)
-plt.grid(True)
-plt.show()</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-tqq-plot" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>t_params <span class="op">=</span> stats.t.fit(returns)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">10</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>stats.probplot(returns, dist<span class="op">=</span><span class="st">"t"</span>, sparams<span class="op">=</span>t_params, plot<span class="op">=</span>plt)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.grid(<span class="va">True</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-tqq-plot" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-tqq-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="data-screening_files/figure-html/fig-tqq-plot-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Q-Q Plot de retornos de precio contra la distribución t."><img src="data-screening_files/figure-html/fig-tqq-plot-output-1.svg" class="img-fluid figure-img"></a>
+<a href="data-screening.embed_files/figure-html/fig-tqq-plot-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Q-Q Plot de retornos de precio contra la distribución t."><img src="data-screening.embed_files/figure-html/fig-tqq-plot-output-1.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tqq-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Q-Q Plot de retornos de precio contra la distribución t.
+Figure&nbsp;3: Q-Q Plot de retornos de precio contra la distribución t.
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
-<div id="2a503e70" class="cell markdown">
+</section>
 <section id="kolmorov-smirnov-test-para-distribución-t" class="level3">
 <h3 class="anchored" data-anchor-id="kolmorov-smirnov-test-para-distribución-t">Kolmorov Smirnov test para distribución t</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="kolmorov-smirnov" class="cell" data-execution_count="7">
-<pre><code>#| label: kolmorov-smirnov
-ks_stat, p_value = stats.kstest(returns, 't', args=t_params)
-print(f"Kolmogorov-Smirnov statistic: {ks_stat}")
-print(f"P-value: {p_value}")</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="kolmorov-smirnov" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ks_stat, p_value <span class="op">=</span> stats.kstest(returns, <span class="st">'t'</span>, args<span class="op">=</span>t_params)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Kolmogorov-Smirnov statistic: </span><span class="sc">{</span>ks_stat<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"P-value: </span><span class="sc">{</span>p_value<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Kolmogorov-Smirnov statistic: 0.028557323574938343
 P-value: 0.0827419967953622</code></pre>
 </div>
 </div></div>
-<div id="b1a5160d" class="cell markdown">
+</section>
 <section id="test-de-estacionariedad-robustez" class="level3">
 <h3 class="anchored" data-anchor-id="test-de-estacionariedad-robustez">Test de estacionariedad/ robustez</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="adf" class="cell" data-execution_count="8">
-<pre><code>#| label: adf
-result = adfuller(returns)
-print('ADF Statistic:', result[0])
-print('p-value:', result[1])</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="adf" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> adfuller(returns)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'ADF Statistic:'</span>, result[<span class="dv">0</span>])</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'p-value:'</span>, result[<span class="dv">1</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>ADF Statistic: -13.174114850736395
 p-value: 1.2332976276203498e-24</code></pre>
 </div>
 </div></div>
-<div id="a4a94f7a" class="cell markdown">
+</section>
 <section id="test-de-autocorrelación" class="level3">
 <h3 class="anchored" data-anchor-id="test-de-autocorrelación">Test de autocorrelación</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-fig-acf-pacf" class="cell" data-execution_count="9">
-<pre><code>#| label: fig-acf-pacf
-#| fig-cap: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos.
-fig, axes = plt.subplots(2, 1, figsize=(10, 8))
-plot_acf(returns, lags=24, ax=axes[0])
-axes[0].set_title('Función de Autocorrelación (ACF)')
-
-plot_pacf(returns, lags=12, ax=axes[1])
-axes[1].set_title('Función de Autocorrelación Parcial (PACF)')
-
-plt.tight_layout()
-plt.show()</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-fig-acf-pacf" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">8</span>))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plot_acf(returns, lags<span class="op">=</span><span class="dv">24</span>, ax<span class="op">=</span>axes[<span class="dv">0</span>])</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Función de Autocorrelación (ACF)'</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plot_pacf(returns, lags<span class="op">=</span><span class="dv">12</span>, ax<span class="op">=</span>axes[<span class="dv">1</span>])</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Función de Autocorrelación Parcial (PACF)'</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-acf-pacf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-acf-pacf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="data-screening_files/figure-html/fig-acf-pacf-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos."><img src="data-screening_files/figure-html/fig-acf-pacf-output-1.svg" class="img-fluid figure-img"></a>
+<a href="data-screening.embed_files/figure-html/fig-acf-pacf-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos."><img src="data-screening.embed_files/figure-html/fig-acf-pacf-output-1.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acf-pacf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos.
+Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos.
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
-<div id="7f5cb522" class="cell markdown">
+</section>
+</section>
 <section id="resultados" class="level2">
 <h2 class="anchored" data-anchor-id="resultados">Resultados</h2>
 <section id="estimación-del-modelo-arima" class="level3">
 <h3 class="anchored" data-anchor-id="estimación-del-modelo-arima">Estimación del modelo ARIMA</h3>
-</section>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-arima-model" class="cell" data-execution_count="10">
-<pre><code>#| label: arima-model
-#| fig-cap: Modelo ARIMA de maxima verosimilitud para la serie de retornos.
-model_auto = auto_arima(returns)
-model_auto.summary()</code></pre>
-<div id="arima-model" class="cell-output cell-output-display" data-execution_count="10">
-<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<caption>SARIMAX Results</caption>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Dep. Variable:</td>
-<td>y</td>
-<td data-quarto-table-cell-role="th">No. Observations:</td>
-<td>1941</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">Model:</td>
-<td>SARIMAX(3, 0, 4)</td>
-<td data-quarto-table-cell-role="th">Log Likelihood</td>
-<td>-8853.517</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Date:</td>
-<td>Sat, 19 Oct 2024</td>
-<td data-quarto-table-cell-role="th">AIC</td>
-<td>17725.034</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">Time:</td>
-<td>16:13:37</td>
-<td data-quarto-table-cell-role="th">BIC</td>
-<td>17775.173</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Sample:</td>
-<td>0</td>
-<td data-quarto-table-cell-role="th">HQIC</td>
-<td>17743.472</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th"></td>
-<td>- 1941</td>
-<td data-quarto-table-cell-role="th"></td>
-<td></td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Covariance Type:</td>
-<td>opg</td>
-<td data-quarto-table-cell-role="th"></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-
-<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<tbody>
-<tr class="odd">
-<td></td>
-<td data-quarto-table-cell-role="th">coef</td>
-<td data-quarto-table-cell-role="th">std err</td>
-<td data-quarto-table-cell-role="th">z</td>
-<td data-quarto-table-cell-role="th">P&gt;|z|</td>
-<td data-quarto-table-cell-role="th">[0.025</td>
-<td data-quarto-table-cell-role="th">0.975]</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">intercept</td>
-<td>0.3602</td>
-<td>0.273</td>
-<td>1.317</td>
-<td>0.188</td>
-<td>-0.176</td>
-<td>0.896</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">ar.L1</td>
-<td>0.1366</td>
-<td>0.065</td>
-<td>2.106</td>
-<td>0.035</td>
-<td>0.009</td>
-<td>0.264</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">ar.L2</td>
-<td>-0.1931</td>
-<td>0.066</td>
-<td>-2.934</td>
-<td>0.003</td>
-<td>-0.322</td>
-<td>-0.064</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">ar.L3</td>
-<td>0.7691</td>
-<td>0.061</td>
-<td>12.644</td>
-<td>0.000</td>
-<td>0.650</td>
-<td>0.888</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">ma.L1</td>
-<td>-0.1139</td>
-<td>0.065</td>
-<td>-1.752</td>
-<td>0.080</td>
-<td>-0.241</td>
-<td>0.014</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">ma.L2</td>
-<td>0.2163</td>
-<td>0.067</td>
-<td>3.220</td>
-<td>0.001</td>
-<td>0.085</td>
-<td>0.348</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">ma.L3</td>
-<td>-0.7032</td>
-<td>0.062</td>
-<td>-11.315</td>
-<td>0.000</td>
-<td>-0.825</td>
-<td>-0.581</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">ma.L4</td>
-<td>0.0750</td>
-<td>0.020</td>
-<td>3.715</td>
-<td>0.000</td>
-<td>0.035</td>
-<td>0.115</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">sigma2</td>
-<td>536.2183</td>
-<td>8.358</td>
-<td>64.154</td>
-<td>0.000</td>
-<td>519.836</td>
-<td>552.600</td>
-</tr>
-</tbody>
-</table>
-
-
-<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Ljung-Box (L1) (Q):</td>
-<td>0.00</td>
-<td data-quarto-table-cell-role="th">Jarque-Bera (JB):</td>
-<td>4395.18</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">Prob(Q):</td>
-<td>1.00</td>
-<td data-quarto-table-cell-role="th">Prob(JB):</td>
-<td>0.00</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Heteroskedasticity (H):</td>
-<td>1.11</td>
-<td data-quarto-table-cell-role="th">Skew:</td>
-<td>0.59</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">Prob(H) (two-sided):</td>
-<td>0.17</td>
-<td data-quarto-table-cell-role="th">Kurtosis:</td>
-<td>10.28</td>
-</tr>
-</tbody>
-</table>
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-arima-model" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>model_auto <span class="op">=</span> auto_arima(returns)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>model_auto.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="arima-model" class="cell-output cell-output-display">
 <br><br>Warnings:<br>[1] Covariance matrix calculated using the outer product of gradients (complex-step).
 <p>Modelo ARIMA de maxima verosimilitud para la serie de retornos.</p>
 </div>
 </div></div>
-<div id="756ad78f" class="cell markdown">
+</section>
 <section id="estimación-del-ar-garch" class="level3">
 <h3 class="anchored" data-anchor-id="estimación-del-ar-garch">Estimación del AR-GARCH</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="garch-model-fitting" class="cell" data-execution_count="11">
-<pre><code>#| label: garch-model-fitting
-#| fig-cap: Ajuste del modelo Zero-Garch ala serie de retornos
-ar = arch_model(returns, mean='Zero', vol='GARCH', dist='t')
-res = ar.fit(last_obs=split_date)</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="garch-model-fitting" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>ar <span class="op">=</span> arch_model(returns, mean<span class="op">=</span><span class="st">'Zero'</span>, vol<span class="op">=</span><span class="st">'GARCH'</span>, dist<span class="op">=</span><span class="st">'t'</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> ar.fit(last_obs<span class="op">=</span>split_date)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Iteration:      1,   Func. Count:      6,   Neg. LLF: 13422.240578344366
 Iteration:      2,   Func. Count:     13,   Neg. LLF: 9134.230609110135
@@ -718,244 +491,109 @@ Optimization terminated successfully    (Exit mode 0)
             Gradient evaluations: 26</code></pre>
 </div>
 </div></div>
-<div id="7100b669" class="cell markdown">
+</section>
 <section id="resultados-del-ar-garch" class="level3">
 <h3 class="anchored" data-anchor-id="resultados-del-ar-garch">Resultados del AR-GARCH</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-garch-model" class="cell" data-execution_count="12">
-<pre><code>#| label: garch-model
-#| fig-cap: Modelo Zero-Garch de la serie de retornos
-HTML(res.summary().as_html())</code></pre>
-<div id="garch-model" class="cell-output cell-output-display" data-execution_count="12">
-<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<caption>Zero Mean - GARCH Model Results</caption>
-<tbody>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Dep. Variable:</td>
-<td>price_return</td>
-<td data-quarto-table-cell-role="th">R-squared:</td>
-<td>0.000</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">Mean Model:</td>
-<td>Zero Mean</td>
-<td data-quarto-table-cell-role="th">Adj. R-squared:</td>
-<td>0.001</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Vol Model:</td>
-<td>GARCH</td>
-<td data-quarto-table-cell-role="th">Log-Likelihood:</td>
-<td>-7622.87</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">Distribution:</td>
-<td>Standardized Student's t</td>
-<td data-quarto-table-cell-role="th">AIC:</td>
-<td>15253.7</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Method:</td>
-<td>Maximum Likelihood</td>
-<td data-quarto-table-cell-role="th">BIC:</td>
-<td>15275.6</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th"></td>
-<td></td>
-<td data-quarto-table-cell-role="th">No. Observations:</td>
-<td>1753</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">Date:</td>
-<td>Sat, Oct 19 2024</td>
-<td data-quarto-table-cell-role="th">Df Residuals:</td>
-<td>1753</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">Time:</td>
-<td>16:13:37</td>
-<td data-quarto-table-cell-role="th">Df Model:</td>
-<td>0</td>
-</tr>
-</tbody>
-</table>
-
-
-<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<caption>Volatility Model</caption>
-<tbody>
-<tr class="odd">
-<td></td>
-<td data-quarto-table-cell-role="th">coef</td>
-<td data-quarto-table-cell-role="th">std err</td>
-<td data-quarto-table-cell-role="th">t</td>
-<td data-quarto-table-cell-role="th">P&gt;|t|</td>
-<td data-quarto-table-cell-role="th">95.0% Conf. Int.</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">omega</td>
-<td>58.8679</td>
-<td>25.182</td>
-<td>2.338</td>
-<td>1.940e-02</td>
-<td>[ 9.512,1.082e+02]</td>
-</tr>
-<tr class="odd">
-<td data-quarto-table-cell-role="th">alpha[1]</td>
-<td>0.1892</td>
-<td>6.657e-02</td>
-<td>2.842</td>
-<td>4.482e-03</td>
-<td>[5.873e-02, 0.320]</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">beta[1]</td>
-<td>0.7737</td>
-<td>6.832e-02</td>
-<td>11.324</td>
-<td>9.943e-30</td>
-<td>[ 0.640, 0.908]</td>
-</tr>
-</tbody>
-</table>
-
-
-<table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
-<caption>Distribution</caption>
-<tbody>
-<tr class="odd">
-<td></td>
-<td data-quarto-table-cell-role="th">coef</td>
-<td data-quarto-table-cell-role="th">std err</td>
-<td data-quarto-table-cell-role="th">t</td>
-<td data-quarto-table-cell-role="th">P&gt;|t|</td>
-<td data-quarto-table-cell-role="th">95.0% Conf. Int.</td>
-</tr>
-<tr class="even">
-<td data-quarto-table-cell-role="th">nu</td>
-<td>2.7894</td>
-<td>0.230</td>
-<td>12.114</td>
-<td>8.853e-34</td>
-<td>[ 2.338, 3.241]</td>
-</tr>
-</tbody>
-</table>
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-garch-model" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>HTML(res.summary().as_html())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="garch-model" class="cell-output cell-output-display">
 <br><br>Covariance estimator: robust
 <p>Modelo Zero-Garch de la serie de retornos</p>
 </div>
 </div></div>
-<div id="2916d873" class="cell markdown">
+</section>
 <section id="residuos-del-ar-garch" class="level3">
 <h3 class="anchored" data-anchor-id="residuos-del-ar-garch">Residuos del AR-GARCH</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-fig-garch-residuals" class="cell" data-execution_count="13">
-<pre><code>#| label: fig-garch-residuals
-#| fig-cap: Residuos del modelo AR-GARCH.
-fig = res.plot()</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-fig-garch-residuals" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> res.plot()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-garch-residuals" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-garch-residuals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="data-screening_files/figure-html/fig-garch-residuals-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Residuos del modelo AR-GARCH."><img src="data-screening_files/figure-html/fig-garch-residuals-output-1.svg" class="img-fluid figure-img"></a>
+<a href="data-screening.embed_files/figure-html/fig-garch-residuals-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Residuos del modelo AR-GARCH."><img src="data-screening.embed_files/figure-html/fig-garch-residuals-output-1.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-garch-residuals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Residuos del modelo AR-GARCH.
+Figure&nbsp;5: Residuos del modelo AR-GARCH.
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
-<div id="8c13fda3" class="cell markdown">
+</section>
 <section id="residuos-contra-volatilidad-condicional" class="level3">
 <h3 class="anchored" data-anchor-id="residuos-contra-volatilidad-condicional">Residuos contra volatilidad condicional</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-fig-residuals-vs-volatility" class="cell" data-execution_count="14">
-<pre><code>#| label: fig-residuals-vs-volatility
-#| fig-cap: Residuos contra la volatilidad condicional del AR-GARCH.
-std_resid = res.resid / res.conditional_volatility
-unit_var_resid = res.resid / res.resid.std()
-df = pd.concat([std_resid, unit_var_resid], axis=1)
-df.columns = ["Residuos Estandarizados", "Residuos de Varianza Unitaria"]
-subplot = df.plot(kind="kde", xlim=(-4, 4))</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="cell-fig-residuals-vs-volatility" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>std_resid <span class="op">=</span> res.resid <span class="op">/</span> res.conditional_volatility</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>unit_var_resid <span class="op">=</span> res.resid <span class="op">/</span> res.resid.std()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([std_resid, unit_var_resid], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> [<span class="st">"Residuos Estandarizados"</span>, <span class="st">"Residuos de Varianza Unitaria"</span>]</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>subplot <span class="op">=</span> df.plot(kind<span class="op">=</span><span class="st">"kde"</span>, xlim<span class="op">=</span>(<span class="op">-</span><span class="dv">4</span>, <span class="dv">4</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-residuals-vs-volatility" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-residuals-vs-volatility-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="data-screening_files/figure-html/fig-residuals-vs-volatility-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Residuos contra la volatilidad condicional del AR-GARCH."><img src="data-screening_files/figure-html/fig-residuals-vs-volatility-output-1.svg" class="img-fluid figure-img"></a>
+<a href="data-screening.embed_files/figure-html/fig-residuals-vs-volatility-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Residuos contra la volatilidad condicional del AR-GARCH."><img src="data-screening.embed_files/figure-html/fig-residuals-vs-volatility-output-1.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-residuals-vs-volatility-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Residuos contra la volatilidad condicional del AR-GARCH.
+Figure&nbsp;6: Residuos contra la volatilidad condicional del AR-GARCH.
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
-<div id="e33df4a4" class="cell markdown">
+</section>
+</section>
 <section id="evaluación-retrospectiva-backtesting" class="level2">
 <h2 class="anchored" data-anchor-id="evaluación-retrospectiva-backtesting">Evaluación Retrospectiva (Backtesting)</h2>
 <section id="conversion-de-varianza-predicha." class="level3">
 <h3 class="anchored" data-anchor-id="conversion-de-varianza-predicha.">Conversion de varianza predicha.</h3>
-</section>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="forecast" class="cell" data-execution_count="15">
-<pre><code>#| label: forecast
-forecasts = res.forecast(horizon=1)
-forecasted_std = np.sqrt(forecasts.variance)
-forecasted_std = forecasted_std[forecasted_std.index &gt;
-                                split_date].loc[R_test.index, 'h.1']</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="forecast" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>forecasts <span class="op">=</span> res.forecast(horizon<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>forecasted_std <span class="op">=</span> np.sqrt(forecasts.variance)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>forecasted_std <span class="op">=</span> forecasted_std[forecasted_std.index <span class="op">&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                                split_date].loc[R_test.index, <span class="st">'h.1'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
-<div id="074df983" class="cell markdown">
+</section>
 <section id="mape-del-modelo" class="level3">
 <h3 class="anchored" data-anchor-id="mape-del-modelo">MAPE del modelo</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="mape" class="cell" data-execution_count="16">
-<pre><code>#| label: mape
-def MAPE(actual, predicted):
-    actual_std = actual.rolling(window=5).std().dropna()
-    return np.mean(np.abs((actual_std - predicted) / actual_std)) * 100
-
-mape_value = MAPE(R_test, forecasted_std)
-print(f"MAPE on Test Set (based on moving std): {mape_value:.2f}%")</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="mape" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> MAPE(actual, predicted):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    actual_std <span class="op">=</span> actual.rolling(window<span class="op">=</span><span class="dv">5</span>).std().dropna()</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.mean(np.<span class="bu">abs</span>((actual_std <span class="op">-</span> predicted) <span class="op">/</span> actual_std)) <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>mape_value <span class="op">=</span> MAPE(R_test, forecasted_std)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"MAPE on Test Set (based on moving std): </span><span class="sc">{</span>mape_value<span class="sc">:.2f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>MAPE on Test Set (based on moving std): 739.70%</code></pre>
 </div>
 </div></div>
-<div id="70226b56" class="cell markdown">
+</section>
 <section id="predichos-vs-actuales-plot-backtested" class="level3">
 <h3 class="anchored" data-anchor-id="predichos-vs-actuales-plot-backtested">Predichos vs Actuales Plot-Backtested</h3>
-</section>
-</div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="cell-fig-predicted-vs-actual-backtest" class="cell" data-execution_count="17">
-<pre><code>#| label: fig-predicted-vs-actual-backtest
-#| fig-cap: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(R_test.index, R_test,
-        label='Desviación Estándar Móvil Real', color='blue')
-ax.plot(forecasted_std.index,
-        forecasted_std, label='Desviación Estándar Móvil Pronosticada', color='red', linestyle='--')
-ax.set_xlim([forecasted_std.index.min(), forecasted_std.index.max()])
-plt.legend()
-plt.show()</code></pre>
+<div class="cell-container"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="cell-fig-predicted-vs-actual-backtest" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>ax.plot(R_test.index, R_test,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>        label<span class="op">=</span><span class="st">'Desviación Estándar Móvil Real'</span>, color<span class="op">=</span><span class="st">'blue'</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>ax.plot(forecasted_std.index,</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        forecasted_std, label<span class="op">=</span><span class="st">'Desviación Estándar Móvil Pronosticada'</span>, color<span class="op">=</span><span class="st">'red'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([forecasted_std.index.<span class="bu">min</span>(), forecasted_std.index.<span class="bu">max</span>()])</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div id="fig-predicted-vs-actual-backtest" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-predicted-vs-actual-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="data-screening_files/figure-html/fig-predicted-vs-actual-backtest-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH"><img src="data-screening_files/figure-html/fig-predicted-vs-actual-backtest-output-1.svg" class="img-fluid figure-img"></a>
+<a href="data-screening.embed_files/figure-html/fig-predicted-vs-actual-backtest-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH"><img src="data-screening.embed_files/figure-html/fig-predicted-vs-actual-backtest-output-1.png" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-predicted-vs-actual-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH
+Figure&nbsp;7: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH
 </figcaption>
 </figure>
 </div>
 </div>
 </div></div>
+</section>
+</section>
      </main>
 <!-- /main column -->  <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
@@ -1376,7 +1014,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"descPosition":"bottom","loop":false,"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom"});
+</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","openEffect":"zoom","descPosition":"bottom","loop":false});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
