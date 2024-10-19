@@ -1,78 +1,211 @@
 ---
 title: Data Screening
-description: Screening and filtering data from the IGN catalog down to the relevant events for La Palma
-authors:
-  - name: Steve Purves
-    orcid: 0000-0002-0760-5497
-  - name: Charlotte Wickham
-    note: Edited original notebook by Steve Purves
-jupyter: python3
+description: Visualización y análisis estadístico del feature dataset
+authors: Ian Contreras
 ---
 
+## Importaciones
+
+### Librerías
 ```{python}
-import pandas as pd
+# | label: importing-libraries
+import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
+import pandas as pd
+import statsmodels.api as sm
+import scipy.stats as stats
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
+from statsmodels.tsa.stattools import adfuller
+from pmdarima.arima import auto_arima
+from arch import arch_model
 ```
 
-Import `la-palma.csv` - a clean subset of [`catalogoComunSV_1663233588717.csv`](https://github.com/Notebooks-Now/submission-quarto-full/blob/main/data/catalogoComunSV_1663233588717.csv):
-
+### Data
 ```{python}
-df = pd.read_csv('la-palma.csv')
-df['DateTime'] = pd.to_datetime(df['DateTime'])
-df = df.sort_values(by=['DateTime'], ascending=True)
-df.head()
+# | label: importing-data
+df = pd.read_csv(r'..\data\csv\irp.csv', parse_dates=['date'], index_col='date')
+returns = df['price_return']
+split_date = '2020-12-31'
+R_test = df[df.index >= split_date]['price_return'].rolling(
+    window=5).std().dropna()
 ```
 
+## Análisis Exploratorio. 
+
+### Serie Histórica
 ```{python}
-df.describe()
-```
-
-```{python}
-df.plot.scatter(x="Longitude", y="Latitude", figsize=(12,12), grid="on");
-```
-
-### Filter 
-
-Also some rows seem to be missing depth measurements, (see differences in the **count** for columns above) - take only rows with valid depths
-
-```{python}
-df = df[df['Depth(km)'].notna()]
-df.describe()
-```
-
-```{python}
-plt.figure(figsize=(20,6))
-plt.subplot(1,3,1)
-df["Latitude"].plot.hist(bins=20, density=True)
-plt.subplot(1,3,2)
-df["Longitude"].plot.hist(bins=20, density=True)
-plt.subplot(1,3,3)
-df["Depth(km)"].plot.hist(bins=50, density=True)
-```
-
-## Spatial Plot
-
-Scatter plot the spatial locations of events
-
-```{python}
-#| label: fig-spatial-plot
-#| fig-cap: Locations of earthquakes on La Palma since 2017.
-#| fig-alt: "A scatterplot of earthquake locations plotting latitude against longitude."
-from matplotlib import colormaps
-cmap = colormaps['viridis_r']
-ax = df.plot.scatter(x="Longitude", y="Latitude", 
-                     s=47-df["Depth(km)"], c=df["Magnitude"], 
-                     figsize=(12,10), grid="on", cmap=cmap)
-colorbar = ax.collections[0].colorbar
-colorbar.set_label("Magnitude")
-
+# | label: fig-price-return-series
+# | fig-cap: Serie de retornos diarios IRP-GOBIX.
+fig, ax = plt.subplots(figsize=(12, 10))
+ax.plot(df.index, df['price_return'], label='Retorno Precio Diario')
+ax.set_ylabel('Price Return')
+ax.set_xlim([df.index.min(), df.index.max()])
+ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+ax.legend()
+plt.title('Serie de retornos diarios IRP-GOBIX')
 plt.show()
 ```
 
-### Timeline Plot
 
-Scatter plot the event time series and look for any quantization issues. Have times & dates been loaded correctly?
-
+### Análisis descriptivo de la muestra
 ```{python}
-ax = df.plot.scatter(x='DateTime', y='Depth(km)', figsize=(20,8))
-ax.set_ylim(50,0);
+# | label: return-descriptive-table
+# | fig-cap: Tabla de las estadísticas descriptiva de la serie de retornos
+desc_stats = returns.describe()
+
+skewness = returns.skew()
+kurtosis = returns.kurtosis()
+jb_test = sm.stats.jarque_bera(returns)
+
+descriptive_table = pd.DataFrame({
+    'Observations': [int(desc_stats['count'])],
+    'Mean': [desc_stats['mean']],
+    'Median': [desc_stats['50%']],
+    'Std. Dev': [desc_stats['std']],
+    'Skewness': [skewness],
+    'Kurtosis': [kurtosis],
+    'Jarque-Bera': [jb_test[0]],
+    'Prob.': [jb_test[1]]
+})
+descriptive_table
+```
+
+### Ajuste de distribuciones
+```{python}
+# | label: fig-distribution-fitting
+# | fig-cap: Ajuste de distribuciones a los retornos de precio.
+distributions = [stats.norm, stats.lognorm, stats.t]
+
+plt.figure(figsize=(10, 6))
+plt.hist(returns, bins=50, density=True, alpha=0.6, label='Empirical returns')
+
+for dist in distributions:
+    params = dist.fit(returns)
+    x = np.linspace(returns.min(), returns.max(), 100)
+    plt.plot(x, dist.pdf(x, *params), label=f'{dist.name} fit')
+
+plt.title('Distribution Fitting to Price Returns')
+plt.xlabel('Price Return')
+plt.ylabel('Density')
+plt.legend()
+plt.show()
+```
+
+### Q-Q plot con respecto a distribución t
+```{python}
+# | label: fig-tqq-plot
+# | fig-cap: Q-Q Plot de retornos de precio contra la distribución t.
+t_params = stats.t.fit(returns)
+
+fig, ax = plt.subplots(figsize=(12, 10))
+stats.probplot(returns, dist="t", sparams=t_params, plot=plt)
+plt.title("Q-Q Plot of Price Return against Student's t-distribution")
+plt.grid(True)
+plt.show()
+```
+
+### Kolmorov Smirnov test para distribución t
+```{python}
+# | label: kolmorov-smirnov
+ks_stat, p_value = stats.kstest(returns, 't', args=t_params)
+print(f"Kolmogorov-Smirnov statistic: {ks_stat}")
+print(f"P-value: {p_value}")
+```
+
+### Test de estacionariedad/ robustez
+```{python}
+# | label: adf
+result = adfuller(returns)
+print('ADF Statistic:', result[0])
+print('p-value:', result[1])
+```
+
+### Test de autocorrelación
+```{python}
+# | label: fig-acf-pacf
+# | fig-cap: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos.
+fig, axes = plt.subplots(2, 1, figsize=(10, 8))
+plot_acf(returns, lags=24, ax=axes[0])
+axes[0].set_title('Autocorrelation Function (ACF)')
+
+plot_pacf(returns, lags=12, ax=axes[1])
+axes[1].set_title('Partial Autocorrelation Function (PACF)')
+
+plt.tight_layout()
+plt.show()
+```
+
+## Resultados 
+### Estimación del modelo ARIMA 
+```{python}
+# | label: arima-model
+# | fig-cap: Modelo ARIMA de maxima verosimilitud para la serie de retornos. 
+model_auto = auto_arima(returns)
+model_auto.summary()
+```
+
+### Estimación del AR-GARCH
+```{python}
+# | label: garch-model
+# | fig-cap: Modelo Zero-Garch de la serie de retornos
+ar = arch_model(returns, mean='Zero', vol='GARCH', dist='t')
+res = ar.fit(last_obs=split_date)
+res.summary()
+```
+
+### Residuos del AR-GARCH
+```{python}
+# | label: fig-garch-residuals
+# | fig-cap: Residuos del modelo AR-GARCH.
+fig = res.plot()
+```
+
+### Residuos contra volatilidad condicional
+```{python}
+# | label: fig-residuals-vs-volatility
+# | fig-cap: Residuos contra la volatilidad condicional del AR-GARCH.
+std_resid = res.resid / res.conditional_volatility
+unit_var_resid = res.resid / res.resid.std()
+df = pd.concat([std_resid, unit_var_resid], axis=1)
+df.columns = ["Std Resids", "Unit Variance Resids"]
+subplot = df.plot(kind="kde", xlim=(-4, 4))
+```
+
+## Evaluación Retrospectiva (Backtesting)
+
+### Conversion de varianza predicha. 
+```{python}
+# | label: forecast
+forecasts = res.forecast(horizon=1)
+forecasted_std = np.sqrt(forecasts.variance)
+forecasted_std = forecasted_std[forecasted_std.index >
+                                split_date].loc[R_test.index, 'h.1']
+```
+
+### MAPE del modelo
+```{python}
+# | label: mape
+def MAPE(actual, predicted):
+    actual_std = actual.rolling(window=5).std().dropna()
+    return np.mean(np.abs((actual_std - predicted) / actual_std)) * 100
+
+
+mape_value = MAPE(R_test, forecasted_std)
+print(f"MAPE on Test Set (based on moving std): {mape_value:.2f}%")
+```
+
+### Predichos vs Actuales Plot-Backtested
+```{python}
+# | label: fig-predicted-vs-actual-backtest
+# | fig-cap: Comparación de valores predichos y actuales en el backtesting.
+plt.figure(figsize=(10, 6))
+plt.plot(R_test.index, R_test,
+         label='Actual Moving Std', color='blue')
+plt.plot(forecasted_std.index,
+         forecasted_std, label='Forecasted Moving Std', color='red', linestyle='--')
+
+plt.title('Actual vs Forecasted Moving Std - Zero-GARCH Model')
+plt.legend()
+plt.show()
+```

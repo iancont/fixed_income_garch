@@ -1,0 +1,25 @@
+---
+title: Data Extract
+description: Extracción, transformación y almacenamiento de las fuentes de datos para ser analizadas por Data-Screening
+authors: Ian Contreras
+---
+```{python}
+# | label: importing-libraries
+import pandas as pd
+import os
+```
+
+```{python}
+# | label: irp
+print("Current Working Directory:", os.getcwd())
+df = pd.read_excel(r"..\\data\\inputs\\Historico del Indicador GOBIX DR.xlsx",
+                   sheet_name="Indice Retorno Precio")
+df = df.rename(columns={'Fecha': 'date', 'Valor': 'irp'})
+df['date'] = pd.to_datetime(df['date'])
+df = df.set_index('date')
+df["price_return"] = df["irp"].pct_change()
+df = df.dropna()
+df = df[df.index <= '2021-09-30']
+df['price_return'] = df['price_return'] * 10_000
+df.to_csv('..\\data\\csv\\irp.csv')
+```

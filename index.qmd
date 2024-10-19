@@ -1,112 +1,181 @@
 ---
-title: La Palma Earthquakes
+title: Un estudio sobre los retornos del mercado de renta fija dominicano utilizando basados en modelos AR-GARCH
+subtitle: Trabajo final de tópicos de econometría
 author:
-  - name: Steve Purves
-    orcid: 0000-0002-0760-5497
-    corresponding: true
-    email: steve@curvenote.com
-    roles:
-      - Investigation
-      - Project administration
-      - Software
-      - Visualization
+  - name: Ian Contreras
+    email: 1116048@intec.edu.do
     affiliations:
-      - Curvenote
-  - name: Rowan Cockett
-    orcid: 0000-0002-7859-8394
-    corresponding: false
-    roles: []
-    affiliations:
-      - Curvenote
+      - INSTITUTO TECNOLÓGICO DE SANTO DOMINGO (INTEC)
 keywords:
-  - La Palma
-  - Earthquakes
+  - Mercado de renta fija
+  - Deuda pública
+  - Modelos AR-GARCH
 abstract: |
-  In September 2021, a significant jump in seismic activity on the island of La Palma (Canary Islands, Spain) signaled the start of a volcanic crisis that still continues at the time of writing. Earthquake data is continually collected and published by the Instituto Geográphico Nacional (IGN). ...
-plain-language-summary: |
-  Earthquake data for the island of La Palma from the September 2021 eruption is found ...
-key-points:
-  - A web scraping script was developed to pull data from the Instituto Geogràphico Nacional into a machine-readable form for analysis
-  - Earthquake events on La Palma are consistent with the presence of both mantle and crustal reservoirs.
+  Este estudio tiene como objetivo analizar los retornos y la volatilidad del mercado de deuda pública dominicana mediante la aplicación de modelos ARMA-GARCH. A través de estos modelos, se busca identificar patrones en el comportamiento de los retornos y predecir su evolución futura. 
 date: last-modified
 bibliography: references.bib
+nocite: |
+  @*
 citation:
-  container-title: Earth and Space Science
+  container-title: Referencias
 number-sections: true
-jupyter: python3
 ---
 
-## Introduction
+## Introducción
 
-```{python}
-import matplotlib.pyplot as plt
-import numpy as np
-eruptions = [1492, 1585, 1646, 1677, 1712, 1949, 1971, 2021]
-```
+La República Dominicana es el país latinoamericano que más ha crecido en los últimos cincuenta años, acompañado de un subsecuente aumento en la complejidad económica [@sanchez2024]. En un contexto de creciente globalización e internacionalización financiera, el mercado de renta fija, en especial el de la deuda pública juega un papel principal. Este se ha vuelto la clase de activo principal para fondos de pensiones como para fondos de inversion.  A pesar de este progreso, persisten desafíos estructurales como la baja liquidez en el mercado secundario y alta volatilidad. 
 
-```{python}
-#| label: fig-timeline
-#| fig-cap: Timeline of recent earthquakes on La Palma
-#| fig-alt: An event plot of the years of the last 8 eruptions on La Palma.
+Este estudio tiene como objetivo analizar los retornos y volatilidad del mercado de deuda publica Dominicana mediante la aplicación de modelos ARMA-GARCH, con el fin de identificar patrones y predecir su comportamiento futuro. Los resultados ofrecerán información valiosa para inversores, contribuyendo al entendimiento profundo del mercado de renta fija dominicano y facilitando una gestión más eficiente del riesgo.
 
-plt.figure(figsize=(6, 1))
-plt.eventplot(eruptions, lineoffsets=0, linelengths=0.1, color='black')
-plt.gca().axes.get_yaxis().set_visible(False)
-plt.ylabel('')
-plt.show()
-```
+## Metodología
 
-```{python}
-#| output: false
+El modelo ARIMA(p,d,q), donde AR(p) es el componente autorregresivo de orden p, d denota el orden de la diferencia aplicada para transformar una serie temporal no estacionaria en estacionaria, y MA(q) representa el promedio móvil de orden q. La esencia del modelo ARIMA radica en la combinación de la operación de diferenciación y el modelo ARMA. Cualquier serie no estacionaria puede volverse estacionaria mediante una diferenciación de orden adecuado, permitiendo así ajustar un modelo ARMA a la serie transformada.
 
-avg_years_between_eruptions = np.mean(np.diff(eruptions[:-1]))
-avg_years_between_eruptions
-```
-
-Based on data up to and including 1971, eruptions on La Palma happen every 79.8 years on average.
-
-Studies of the magma systems feeding the volcano, such as @marrero2019, have proposed that there are two main magma reservoirs feeding the Cumbre Vieja volcano; one in the mantle (30-40km depth) which charges and in turn feeds a shallower crustal reservoir (10-20km depth).
-
-Eight eruptions have been recorded since the late 1400s (@fig-timeline).
-
-Data and methods are discussed in @sec-data-methods.
-
-Let $x$ denote the number of eruptions in a year. Then, $x$ can be modeled by a Poisson distribution
+El modelo de promedio móvil autorregresivo ARMA(p,q) incluye tanto un componente autorregresivo de orden p como uno de promedio móvil de orden q, y se estructura de la siguiente forma:
 
 $$
-p(x) = \frac{e^{-\lambda} \lambda^{x}}{x !}
-$$ {#eq-poisson}
+X_t = \phi_1 X_{t-1} + \phi_2 X_{t-2} + \dots + \phi_p X_{t-p} + \epsilon_t + \theta_1 \epsilon_{t-1} + \theta_2 \epsilon_{t-2} + \dots + \theta_q \epsilon_{t-q}
+$$ {eq: arma}
 
-where $\lambda$ is the rate of eruptions per year. Using @eq-poisson, the probability of an eruption in the next $t$ years can be calculated.
+Estos modelos son adecuados solo para describir series temporales suaves, mientras que en la práctica, a menudo se trabaja con series temporales no suaves. Para estos casos, aplicar una o dos diferenciaciones puede transformar los datos en series suaves.
 
-| Name                | Year |
-|---------------------|------|
-| Current             | 2021 |
-| Teneguía            | 1971 |
-| Nambroque           | 1949 |
-| El Charco           | 1712 |
-| Volcán San Antonio  | 1677 |
-| Volcán San Martin   | 1646 |
-| Tajuya near El Paso | 1585 |
-| Montaña Quemada     | 1492 |
+Si no se cumple el supuesto de homogeneidad de la varianza, puede ocurrir heterocedasticidad. Dado que los datos de la muestra son suaves, en este documento se establece un modelo ARMA(p,q) para la serie de rendimientos con el fin de describir las características de volatilidad del índice GOBIX. Se realizan pruebas de efecto ARCH y se resuelve el problema de la heterocedasticidad mediante un modelo GARCH.
 
-: Recent historic eruptions on La Palma {#tbl-history}
+El modelo GARCH extiende el modelo ARCH al considerar la autocorrelación de orden p en la función de heterocedasticidad, lo que permite ajustar de manera efectiva una función de heterocedasticidad con memoria a largo plazo. El modelo GARCH se define de la siguiente manera:
 
-@tbl-history summarises the eruptions recorded since the colonization of the islands by Europeans in the late 1400s.
+$$
+a_t = \sigma_t \epsilon_t, \quad \sigma_t^2 = \alpha_0 + \sum_{i=1}^{p} \alpha_i a_{t-i}^2 + \sum_{j=1}^{q} \beta_j \sigma_{t-j}^2
+$$ {#eq: garch}
 
-![Map of La Palma](images/la-palma-map.png){#fig-map}
+El modelo GARCH, propuesto por Bollerslev, atribuye la volatilidad actual tanto a la volatilidad de momentos pasados como a los errores de momentos pasados, lo que le permite explicar el fenómeno de agrupación en la volatilidad de los rendimientos financieros.
 
-La Palma is one of the west most islands in the Volcanic Archipelago of the Canary Islands (@fig-map).
+## Datos
 
-{{< embed notebooks/data-screening.qmd#fig-spatial-plot >}}
+### Fuente de datos
+Un Índice Financiero es una medida estadística que refleja el valor de un conjunto de activos
+financieros agrupados de acuerdo con ciertos criterios. Estos se utilizan como objetivo de
+rendimiento de portafolios, referencias sobre las características retorno/riesgo de una clase de
+activo y como referencia para productos anclados a índices. (Bloomberg, 2023)
 
-@fig-spatial-plot shows the location of recent Earthquakes on La Palma.
+En el mercado de renta fija de la República Dominicana, el único índice público es el GOBIX, que
+representa la deuda gubernamental consolidada en peso. Este índice está compuesto por títulos emitidos localmente por el Banco Central y el Ministerio de Hacienda, y se publica en dos modalidades: índice de precio limpio e índice de retorno-precio. Para este estudio, se utilizará el índice de retorno precio @retorno-precio, ya que aisla el componente de retorno de mercado el cual es el objetivo de estudio. 
 
-## Data & Methods {#sec-data-methods}
+El GOBIX se caracteriza por los siguientes criterios:
 
-## Conclusion
+- **Elegibilidad**: Solo se incluyen títulos "bullet" emitidos en pesos dominicanos con al menos 60 días desde su emisión.
+- **Liquidez**: Los títulos se seleccionan en función del Índice de Bursatilidad publicado por la Proveedora de Precios, garantizando la inclusión de los instrumentos más negociados.
+- **Ponderación**: La ponderación se realiza por capitalización de mercado, lo que asegura que los títulos más relevantes tengan mayor peso en el índice.
+- **Rebalanceo**: Se efectúa un rebalanceo mensual para ajustar el índice según la disponibilidad de inversión en los bonos.
+- **Fuentes de información**: Los datos provienen de la Bolsa de Valores de la República Dominicana y la Proveedora de Precios.
 
-## References {.unnumbered}
+### Índice de Retorno-Precio {#retorno-precio}
+
+El índice de retorno-precio es una metodología utilizada para calcular el rendimiento de un índice de renta fija, centrándose exclusivamente en las variaciones del precio limpio de los títulos, sin tener en cuenta los intereses acumulados ni el pago de cupones durante el período de cálculo. En el contexto del GOBIX, este índice refleja las fluctuaciones en los precios de los bonos dominicanos debido a las variaciones en las tasas de interés del mercado.
+
+**Características del Índice de Retorno-Precio del GOBIX**:
+
+- **Enfoque en el Precio Limpio**: El cálculo del índice se basa en el precio limpio de los bonos, excluyendo los intereses acumulados.
+- **Reflejo de la Volatilidad**: Este índice es un indicador del riesgo asociado a las fluctuaciones en las tasas de interés y su impacto en el capital invertido.
+- **Fórmula de Cálculo**:
+
+  $$
+  IRP_t = IRP_{m-1} \times (1 + RPI_t)
+  $$
+
+  Donde:
+  - $IRP_0 = 100$ es el valor base del índice en la fecha de inicio.
+  - $IRP_t$ es el valor del índice en el día $t$.
+  - $IRP_{m-1}$ es el valor del índice en el último día hábil del mes anterior.
+  - $RPI_t$ es el retorno-precio del índice en $t$.
+
+El retorno-precio del índice ($RPI_t$) se calcula como la suma ponderada del retorno-precio de cada bono ($RPI_{i,t}$), donde la ponderación ($\omega_i$) se determina según la capitalización de mercado de cada bono.
+
+### Selección de muestra de entrenamiento/prueba {#sec-test-train}
+
+Para este estudio, se analizarán datos comprendidos entre 2014 y 2024. La metodología empleada para dividir el conjunto de datos en muestras de entrenamiento y prueba será el **Time Series Cross-Validator**. A diferencia de la validación cruzada tradicional, que aleatoriza los datos, esta técnica respeta el orden temporal, lo cual es crucial en el análisis de series de tiempo.
+
+En cada partición (k-ésimo split), la técnica funciona de la siguiente manera:
+
+- **Conjunto de Entrenamiento**: Incluye los primeros *k* pliegues (folds).
+- **Conjunto de Prueba**: Incluye el pliegue *(k+1)*.
+
+Es importante destacar que los conjuntos de prueba siempre contienen datos posteriores a los utilizados en los conjuntos de entrenamiento, lo que asegura que el modelo sea evaluado utilizando datos futuros.
+
+## Análisis Exploratorio. {#sec-eda}
+
+La gráfica de retornos diarios del IRP-GOBIX muestra baja volatilidad entre 2015 y 2022, con retornos generalmente dentro de un rango de ±2.5%. A partir de 2022, se observa un fuerte incremento en la volatilidad, alcanzando picos de más del 12% en 2023. Este comportamiento refleja un fenómeno de **"volatility clustering"**, donde períodos de baja volatilidad son seguidos por fases de alta volatilidad. Los choques recientes pueden estar relacionados con factores externos como cambios en tasas de interés o incertidumbre macroeconómica. Esto subraya la importancia de aplicar modelos ARMA-GARCH para capturar la dinámica y prever el comportamiento futuro del mercado de deuda pública dominicana.
+
+### Análisis descriptivo de la muestra {#sec-estadistica-descriptiva}
+
+La tabla de análisis descriptivo de los retornos muestra información clave sobre la distribución de la serie de tiempo de rendimientos. Con 2,646 observaciones, la media de los retornos es cercana a cero (0.00007), lo que indica que, en promedio, los rendimientos son prácticamente nulos. La mediana de -0.000041 es también cercana a cero, sugiriendo una distribución ligeramente sesgada hacia valores negativos. La desviación estándar de 0.004995 indica una moderada dispersión alrededor de la media, lo que refleja cierta volatilidad en los rendimientos. El valor de asimetría (9.19) sugiere una fuerte asimetría positiva, lo que significa que la serie tiene una cola larga hacia la derecha, lo cual es típico de datos con eventos extremos. La kurtosis (246.75) indica que la distribución es leptocúrtica, con una mayor concentración de valores alrededor de la media y colas más pesadas que una distribución normal. El test de Jarque-Bera arroja un valor extremadamente alto (6.72 millones), acompañado de una probabilidad de 0.0, lo que indica que la serie no sigue una distribución normal, confirmando la presencia de asimetría y colas pesadas.
+
+La gráfica muestra el ajuste de tres distribuciones (Normal, Lognormal y t de Student) a los retornos de precio del índice GOBIX. La distribución empírica (en azul) tiene una forma altamente concentrada en torno a cero, con colas más gruesas que lo que se esperaría bajo una distribución normal. El ajuste de la distribución t de Student (en rojo) parece capturar mejor los valores extremos, con colas más largas y una mayor concentración en el centro, lo que es típico en series financieras con episodios de alta volatilidad. Por otro lado, tanto la distribución normal (en naranja) como la lognormal (en verde) subestiman las colas de la distribución empírica, lo que indica que no son capaces de capturar adecuadamente los valores atípicos presentes en los datos. Esto refuerza la idea de que la distribución t de Student es una mejor candireturns para modelar los retornos, dada su flexibilidad para ajustarse a la leptocurtosis (colas gruesas y alta concentración alrededor de la media).
+
+La gráfica Q-Q (Quantile-Quantile) compara los cuantiles teóricos de una distribución t de Student con los cuantiles observados de la serie de retornos de precios del índice GOBIX. En general, la mayoría de los puntos se alinean con la línea roja, lo que sugiere que los retornos de precios siguen razonablemente bien una distribución t de Student, especialmente en las partes centrales de la distribución.`
+
+El estadístico de Kolmogorov-Smirnov es de $0.0375$, con un p-valor de $0.00116$, lo que indica que, aunque la distribución t de Student captura la mayor parte de los retornos, no es un ajuste perfecto. Este resultado sugiere que hay discrepancias entre la distribución teórica y los datos reales, especialmente en las colas de la distribución, donde se observan valores extremos.
+
+Los outliers en las colas (tanto en la derecha como en la izquierda) reflejan eventos extremos que no son completamente capturados por la distribución t de Student. Estos valores atípicos no son simplemente anomalías, sino que pueden explicarse claramente por los efectos del ciclo de tasas de interés extremas que se vivió durante la pandemia de COVID-19. Durante ese período, las tasas de interés fluctuaron drásticamente en respuesta a las políticas económicas de emergencia y la elevada incertidumbre en los mercados, lo que provocó cambios bruscos en los precios de los bonos y, por lo tanto, generó estos valores atípicos.
+
+### Test de estacionariedad/robustez {#sec-estacionariedad}
+
+El test de Dickey-Fuller aumentado (ADF) se utilizó para evaluar la estacionariedad de la serie de retornos, un requisito fundamental para la estimación de modelos ARMA y GARCH. Los resultados obtenidos muestran un ADF Statistic de -12.726 y un p-valor de 9.598e-24, lo que permite rechazar la hipótesis nula de raíz unitaria al nivel de significancia del 5%. Esto confirma que la serie de retornos es estacionaria, es decir, no presenta tendencia significativa y sus fluctuaciones se distribuyen alrededor de una media constante a lo largo del tiempo. Estos resultados son consistentes con el comportamiento típico de las series de retornos financieros, lo que habilita la estimación adecuada de modelos ARMA-GARCH sobre la serie.
+
+### Test de autocorrelación {#sec-autocorrelacion}
+
+El gráfico de la Función de Autocorrelación (ACF) muestra un pico significativo en el primer rezago, seguido por valores cercanos a cero para los rezagos posteriores. Este comportamiento sugiere la presencia de un modelo MA(1), ya que la ACF muestra un solo pico significativo y los siguientes rezagos no presentan autocorrelación. Esto indica que el proceso puede tener una estructura de media móvil de primer orden, donde los choques aleatorios solo tienen un impacto significativo en el primer rezago.
+
+En cuanto a la Función de Autocorrelación Parcial (PACF), también se observa un comportamiento similar: un pico en el primer rezago y valores prácticamente nulos a partir del segundo rezago. Según la metodología de Box-Jenkins, esto refuerza la idea de que un modelo MA(1) sería adecuado, ya que la PACF no presenta la decaída característica de un proceso autoregresivo (AR) y, en cambio, muestra un comportamiento puntual.
+
+## Resultados 
+
+#### Representacion matematica del modelo  AR-GARCH(1,1)
+
+La ecuación de la media (componente ARMA):
+
+$$
+\hat{y}_t = -0.4856 + \epsilon_t
+$$
+
+donde:
+- $-0.4856$ es la constante del modelo.
+
+El término de error $\epsilon_t$ sigue un proceso GARCH(1,1):
+
+$$
+\epsilon_t = \sqrt{\sigma_t} z_t, \quad \sigma_t^2 = 200.4681 + 0.3243 \epsilon_{t-1}^2 + 0.6757 \sigma_{t-1}^2
+$$
+
+donde:
+
+- $\sigma_t^2$ es la varianza condicional,
+
+- $\omega = 200.4681$ es la constante de la ecuación de volatilidad,
+
+- $\alpha_1 = 0.3243$ es el coeficiente ARCH que captura el impacto de los shocks pasados $\epsilon_{t-1}^2$,
+
+- $\beta_1 = 0.6757$ es el coeficiente GARCH que captura la persistencia de la volatilidad pasada $\sigma_{t-1}^2$.
+
+Finalmente, el término de error $\epsilon_t$ sigue una distribución t de Student con $\nu = 2.3311$ grados de libertad:
+
+$$
+\epsilon_t \sim t_{2.3311}(0, \sigma_t^2)
+$$
+
+donde $\nu$ representa los grados de libertad de la distribución t de Student.
+
+<!-- No giher order garch models outperform the garch (1,1) when it comes to variance of markets returns -->
+### Evaluación Retrospectiva (Backtesting)
+
+## Discusión
+
+## Conclusión
+
+<!-- {{< embed notebooks/data-screening.qmd#fig-spatial-plot >}}
+
+@fig-spatial-plot shows the location of recent Earthquakes on La Palma. -->
+
+## References
 
 ::: {#refs}
 :::
