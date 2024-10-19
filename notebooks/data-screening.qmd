@@ -3,8 +3,8 @@ title: Data Screening
 description: Visualización y análisis estadístico del feature dataset
 authors: Ian Contreras
 format:
-    html: 
-        fig-format: svg
+  html:
+    fig-format: svg
 ---
 
 ## Importaciones
@@ -36,8 +36,6 @@ from IPython.display import Markdown, HTML
 # | label: importing-data
 df = pd.read_csv(r'..\data\csv\irp.csv', parse_dates=[
                  'date'], index_col='date')
-# df = pd.read_csv(r'.\data\csv\irp.csv', parse_dates=[
-#                  'date'], index_col='date')
 returns = df['price_return']
 split_date = '2020-12-31'
 R_test = df[df.index >= split_date]['price_return'].rolling(

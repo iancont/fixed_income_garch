@@ -2,6 +2,9 @@
 title: Data Extract
 description: Extracción, transformación y almacenamiento de las fuentes de datos para ser analizadas por Data-Screening
 authors: Ian Contreras
+format:
+  html:
+    fig-format: svg
 ---
 ```{python}
 # | label: importing-libraries

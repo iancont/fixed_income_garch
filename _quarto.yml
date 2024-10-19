@@ -8,6 +8,7 @@ execute:
 format:
   html:
     toc: true
+    fig-format: svg
     comments:
       hypothesis: true
   elsevier-pdf:
@@ -18,7 +19,5 @@ format:
       layout: onecolumn
       cite-style: number
   docx: default
-  jats: default
-
 
 

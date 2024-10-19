@@ -1,0 +1,49 @@
+<sub-article article-type="notebook" id="nb-3">
+<front-stub>
+<title-group>
+<article-title>Data Extract</article-title>
+</title-group>
+<contrib-group>
+<contrib contrib-type="author">
+<name>
+<surname>Contreras</surname>
+<given-names>Ian</given-names>
+</name>
+<string-name>Ian Contreras</string-name>
+
+</contrib>
+</contrib-group>
+</front-stub>
+
+<body>
+<sec id="importing-libraries" specific-use="notebook-content">
+<preformat>#| label: importing-libraries
+import pandas as pd
+import os</preformat>
+</sec>
+<sec id="irp" specific-use="notebook-content">
+<preformat>#| label: irp
+print(&quot;Current Working Directory:&quot;, os.getcwd())
+df = pd.read_excel(r&quot;..\\data\\inputs\\historico_gobix_dr.xlsx&quot;,
+                   sheet_name=&quot;Indice Retorno Precio&quot;)
+df = df.rename(columns={'Fecha': 'date', 'Valor': 'irp'})
+df['date'] = pd.to_datetime(df['date'])
+df = df.set_index('date')
+df[&quot;price_return&quot;] = df[&quot;irp&quot;].pct_change()
+df = df.dropna()
+df = df[df.index &lt;= '2021-09-30']
+df['price_return'] = df['price_return'] * 10_000
+df.to_csv('..\\data\\csv\\irp.csv')</preformat>
+<boxed-text>
+  <preformat>Current Working Directory: C:\Users\contr\OneDrive - INTEC\TRI 9\ECONOM\fixed_income_garch\notebooks</preformat>
+</boxed-text>
+</sec>
+</body>
+
+
+
+<back>
+</back>
+
+
+</sub-article>
