@@ -14,9 +14,6 @@ abstract: |
   Este estudio tiene como objetivo analizar los retornos y la volatilidad del mercado de deuda pública dominicana mediante la aplicación de modelos ARMA-GARCH. A través de estos modelos, se busca identificar patrones en el comportamiento de los retornos y predecir su evolución futura. 
 date: last-modified
 bibliography: references.bib
-format:
-  html:
-    fig-format: svg
 execute:
   echo: false
 nocite: |
