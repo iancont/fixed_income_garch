@@ -308,7 +308,7 @@
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>R_test <span class="op">=</span> df[df.index <span class="op">&gt;=</span> split_date][<span class="st">'price_return'</span>].rolling(</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    window<span class="op">=</span><span class="dv">5</span>).std().dropna()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
-<div id="a8982af7" class="cell markdown">
+<div id="83a931a2" class="cell markdown">
 <section id="introducción" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introducción</h1>
 <p>El mercado de renta fija en la República Dominicana ha emergido como uno de los sectores más importantes dentro de la economía, especialmente en lo que respecta a la deuda pública, la cual juega un papel crucial en la financiación de proyectos gubernamentales y el sostenimiento de la política fiscal. En los últimos cincuenta años, el país ha experimentado un crecimiento económico significativo, consolidándose como una de las economías más dinámicas de América Latina. Este crecimiento ha estado acompañado por una mayor complejidad económica, lo que ha incrementado la relevancia del mercado financiero dominicano, en particular el mercado de deuda pública, que ha sido un activo clave para fondos de pensiones y fondos de inversión.</p>
@@ -401,7 +401,7 @@ IRP_t = IRP_{m-1} \times (1 + RPI_t)
 <div id="fig-price-return-series" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-price-return-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="index_files/figure-html/notebooks-data-screening-fig-price-return-series-output-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX."><img src="index_files/figure-html/notebooks-data-screening-fig-price-return-series-output-2.png" class="img-fluid figure-img"></a>
+<a href="index_files/figure-html/notebooks-data-screening-fig-price-return-series-output-2.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX."><img src="index_files/figure-html/notebooks-data-screening-fig-price-return-series-output-2.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-price-return-series-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX.
@@ -436,7 +436,7 @@ Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX.
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Prob.'</span>: [jb_test[<span class="dv">1</span>]]</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>})</span>
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>descriptive_table</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="return-descriptive-stats" class="cell-output cell-output-display" data-execution_count="3">
+<div id="return-descriptive-stats" class="cell-output cell-output-display" data-execution_count="27">
 <div>
 
 
@@ -473,7 +473,7 @@ Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX.
 <p>Tabla de las estadísticas descriptiva de la serie de retornos</p>
 </div>
 </div></div>
-<div id="abc04243" class="cell markdown">
+<div id="e4362f2f" class="cell markdown">
 <p>El análisis descriptivo de los retornos ofrece una perspectiva más detallada sobre la distribución de la serie. Con un total de 1,941 observaciones, la <strong>media</strong> de los retornos es de <span class="math inline">\(1.353251\)</span>, lo que indica un rendimiento promedio positivo. Sin embargo, la <strong>mediana</strong> de <span class="math inline">\(-0.318044\)</span> sugiere un leve sesgo hacia valores negativos, lo que refleja que la mayoría de los retornos tienden a ser ligeramente inferiores a la media. La <strong>desviación estándar</strong>, con un valor de <span class="math inline">\(23.502911\)</span>, revela una amplia dispersión de los datos, lo que confirma la presencia de una volatilidad significativa en los rendimientos, muy superior al valor medio.</p>
 <p>En cuanto a la <strong>asimetría</strong> (<span class="math inline">\(0.70527\)</span>), se observa una ligera inclinación hacia valores extremos positivos, lo que implica la existencia de eventos fuera de lo común que afectan los rendimientos. La <strong>kurtosis</strong> de <span class="math inline">\(7.587995\)</span> indica una distribución <strong>leptocúrtica</strong>, caracterizada por una alta concentración de valores alrededor de la media y colas más gruesas que una distribución normal, lo que es típico en datos financieros que presentan eventos extremos. El <strong>test de Jarque-Bera</strong>, con un valor de <span class="math inline">\(4,789.532331\)</span>, confirma que la serie no sigue una distribución normal, validando la presencia de asimetría y colas pesadas en los datos. Estos resultados resaltan la necesidad de emplear modelos que puedan capturar adecuadamente estos comportamientos no lineales, esenciales para el análisis del mercado.</p>
 <section id="sec-distribucion-retornos" class="level2" data-number="4.3">
@@ -498,7 +498,7 @@ Figure&nbsp;1: Serie de retornos diarios IRP-GOBIX.
 <div id="fig-distribution-fitting" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-distribution-fitting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="index_files/figure-html/notebooks-data-screening-fig-distribution-fitting-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Ajuste de distribuciones a los retornos de precio."><img src="index_files/figure-html/notebooks-data-screening-fig-distribution-fitting-output-1.png" class="img-fluid figure-img"></a>
+<a href="index_files/figure-html/notebooks-data-screening-fig-distribution-fitting-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Figure&nbsp;2: Ajuste de distribuciones a los retornos de precio."><img src="index_files/figure-html/notebooks-data-screening-fig-distribution-fitting-output-1.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-distribution-fitting-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2: Ajuste de distribuciones a los retornos de precio.
@@ -521,7 +521,7 @@ Figure&nbsp;2: Ajuste de distribuciones a los retornos de precio.
 <div id="fig-tqq-plot" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-tqq-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="index_files/figure-html/notebooks-data-screening-fig-tqq-plot-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Q-Q Plot de retornos de precio contra la distribución t."><img src="index_files/figure-html/notebooks-data-screening-fig-tqq-plot-output-1.png" class="img-fluid figure-img"></a>
+<a href="index_files/figure-html/notebooks-data-screening-fig-tqq-plot-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="Figure&nbsp;3: Q-Q Plot de retornos de precio contra la distribución t."><img src="index_files/figure-html/notebooks-data-screening-fig-tqq-plot-output-1.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tqq-plot-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;3: Q-Q Plot de retornos de precio contra la distribución t.
@@ -557,7 +557,7 @@ Figure&nbsp;3: Q-Q Plot de retornos de precio contra la distribución t.
 <div id="fig-acf-pacf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-acf-pacf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="index_files/figure-html/notebooks-data-screening-fig-acf-pacf-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos."><img src="index_files/figure-html/notebooks-data-screening-fig-acf-pacf-output-1.png" class="img-fluid figure-img"></a>
+<a href="index_files/figure-html/notebooks-data-screening-fig-acf-pacf-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos."><img src="index_files/figure-html/notebooks-data-screening-fig-acf-pacf-output-1.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-acf-pacf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos.
@@ -582,7 +582,7 @@ Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación
 <div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-arima-model" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model_auto <span class="op">=</span> auto_arima(returns)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model_auto.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="arima-model" class="cell-output cell-output-display" data-execution_count="4">
+<div id="arima-model" class="cell-output cell-output-display" data-execution_count="28">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>SARIMAX Results</caption>
 <tbody>
@@ -606,7 +606,7 @@ Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>15:09:21</td>
+<td>16:25:40</td>
 <td data-quarto-table-cell-role="th">BIC</td>
 <td>17775.173</td>
 </tr>
@@ -760,7 +760,7 @@ Figure&nbsp;4: Función de autocorrelación (ACF) y función de autocorrelación
 <p>Modelo ARIMA de maxima verosimilitud para la serie de retornos.</p>
 </div>
 </div></div>
-<div id="307b3d33" class="cell markdown">
+<div id="0cdb0d11" class="cell markdown">
 <p>El modelo SARIMAX(3, 0, 4) se estimó con el objetivo de capturar la dinámica subyacente de la serie de retornos. Aunque los resultados muestran que algunos de los coeficientes del componente autorregresivo (AR) y del promedio móvil (MA) son estadísticamente significativos (e.g., <span class="math inline">\(AR(3)\)</span> con un coeficiente de <span class="math inline">\(0.7691\)</span>, <span class="math inline">\(p &lt; 0.001\)</span> y <span class="math inline">\(MA(2)\)</span> con <span class="math inline">\(p &lt; 0.01\)</span>), el desempeño general del modelo presenta ciertas limitaciones. El test de heterocedasticidad muestra un valor de 1.11, lo que indica la presencia de heterocedasticidad en la serie, un problema común en series financieras, donde la varianza de los errores no es constante a lo largo del tiempo.</p>
 <p>Además, el estadístico de Jarque-Bera de 4395.18, con una probabilidad de <span class="math inline">\(p = 0.00\)</span>, confirma que los residuos no siguen una distribución normal, lo que refuerza la idea de que un modelo basado únicamente en niveles, como el ARIMA, podría no ser suficiente para capturar la volatilidad inherente a los retornos del mercado de deuda pública dominicano. Dado que los modelos ARIMA no están diseñados para abordar adecuadamente la heterocedasticidad, pasamos a estimar un modelo GARCH, que es más apropiado para capturar los cambios en la volatilidad.</p>
 <section id="modelo-zero-garch" class="level2" data-number="5.2">
@@ -807,7 +807,7 @@ Optimization terminated successfully    (Exit mode 0)
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-garch-model" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>res.summary()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div id="garch-model" class="cell-output cell-output-display" data-execution_count="6">
+<div id="garch-model" class="cell-output cell-output-display" data-execution_count="30">
 <table class="simpletable caption-top table table-sm table-striped small" data-quarto-postprocess="true">
 <caption>Zero Mean - GARCH Model Results</caption>
 <tbody>
@@ -855,7 +855,7 @@ Optimization terminated successfully    (Exit mode 0)
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>15:09:21</td>
+<td>16:25:40</td>
 <td data-quarto-table-cell-role="th">Df Model:</td>
 <td>0</td>
 </tr>
@@ -927,7 +927,7 @@ Optimization terminated successfully    (Exit mode 0)
 <p>Modelo Zero-Garch de la serie de retornos</p>
 </div>
 </div></div>
-<div id="bec1b07e" class="cell markdown">
+<div id="756aa2d9" class="cell markdown">
 <p>Los resultados del modelo Zero-GARCH confirman un buen ajuste a la volatilidad de la serie de retornos. El coeficiente <span class="math inline">\(\omega\)</span> del proceso de volatilidad es de <span class="math inline">\(58.8679\)</span> (<span class="math inline">\(p &lt; 0.05\)</span>), lo que indica un nivel base significativo de volatilidad en la serie. El parámetro <span class="math inline">\(\alpha_1\)</span>, que mide la influencia de los shocks pasados en la volatilidad actual, es positivo y significativo (<span class="math inline">\(0.1892\)</span>, <span class="math inline">\(p &lt; 0.01\)</span>), lo que sugiere que los shocks pasados tienen un impacto considerable en la volatilidad presente. Por otro lado, <span class="math inline">\(\beta_1\)</span> (<span class="math inline">\(0.7737\)</span>, <span class="math inline">\(p &lt; 0.001\)</span>) indica que existe una fuerte persistencia en la volatilidad, característica común en los mercados financieros, donde las fases de alta volatilidad tienden a durar varios periodos.</p>
 <p>El uso de la distribución t de Student para los residuos estandarizados, con un parámetro <span class="math inline">\(\nu\)</span> de <span class="math inline">\(2.7894\)</span> (<span class="math inline">\(p &lt; 0.001\)</span>), confirma la presencia de colas más gruesas en la distribución de los retornos, lo que es consistente con la leptocurtosis observada en la serie de retornos.</p>
 <section id="residuos-del-zero-garch" class="level3" data-number="5.2.1">
@@ -939,7 +939,7 @@ Optimization terminated successfully    (Exit mode 0)
 <div id="fig-garch-residuals" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-garch-residuals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="index_files/figure-html/notebooks-data-screening-fig-garch-residuals-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Residuos del modelo AR-GARCH."><img src="index_files/figure-html/notebooks-data-screening-fig-garch-residuals-output-1.png" class="img-fluid figure-img"></a>
+<a href="index_files/figure-html/notebooks-data-screening-fig-garch-residuals-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Figure&nbsp;5: Residuos del modelo AR-GARCH."><img src="index_files/figure-html/notebooks-data-screening-fig-garch-residuals-output-1.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-garch-residuals-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;5: Residuos del modelo AR-GARCH.
@@ -964,7 +964,7 @@ Figure&nbsp;5: Residuos del modelo AR-GARCH.
 <div id="fig-residuals-vs-volatility" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-residuals-vs-volatility-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="index_files/figure-html/notebooks-data-screening-fig-residuals-vs-volatility-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Residuos contra la volatilidad condicional del AR-GARCH."><img src="index_files/figure-html/notebooks-data-screening-fig-residuals-vs-volatility-output-1.png" class="img-fluid figure-img"></a>
+<a href="index_files/figure-html/notebooks-data-screening-fig-residuals-vs-volatility-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Figure&nbsp;6: Residuos contra la volatilidad condicional del AR-GARCH."><img src="index_files/figure-html/notebooks-data-screening-fig-residuals-vs-volatility-output-1.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-residuals-vs-volatility-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;6: Residuos contra la volatilidad condicional del AR-GARCH.
@@ -995,7 +995,7 @@ Figure&nbsp;6: Residuos contra la volatilidad condicional del AR-GARCH.
 <div id="fig-predicted-vs-actual-backtest" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-predicted-vs-actual-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca" class="">
-<a href="index_files/figure-html/notebooks-data-screening-fig-predicted-vs-actual-backtest-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH"><img src="index_files/figure-html/notebooks-data-screening-fig-predicted-vs-actual-backtest-output-1.png" class="img-fluid figure-img"></a>
+<a href="index_files/figure-html/notebooks-data-screening-fig-predicted-vs-actual-backtest-output-1.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-7" title="Figure&nbsp;7: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH"><img src="index_files/figure-html/notebooks-data-screening-fig-predicted-vs-actual-backtest-output-1.svg" class="img-fluid figure-img"></a>
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-predicted-vs-actual-backtest-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;7: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH
@@ -1483,7 +1483,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","descPosition":"bottom","loop":false,"selector":".lightbox"});
+</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","loop":false,"openEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

@@ -225,7 +225,7 @@
 <h2 class="anchored" data-anchor-id="importaciones">Importaciones</h2>
 <section id="librerías" class="level3">
 <h3 class="anchored" data-anchor-id="librerías">Librerías</h3>
-<div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div id="importing-libraries" class="cell" data-execution_count="1">
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="importing-libraries" class="cell" data-execution_count="2">
 <pre><code>#| label: importing-libraries
 # Manejo de datos y análisis
 import numpy as np
@@ -246,24 +246,22 @@ import matplotlib.pyplot as plt
 from IPython.display import Markdown, HTML</code></pre>
 </div></div>
 </section>
-<div id="9b47bf8d" class="cell markdown">
+<div id="190829d4" class="cell markdown">
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div id="importing-data" class="cell" data-execution_count="2">
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="importing-data" class="cell" data-execution_count="3">
 <pre><code>#| label: importing-data
 df = pd.read_csv(r'..\data\csv\irp.csv', parse_dates=[
                  'date'], index_col='date')
-# df = pd.read_csv(r'.\data\csv\irp.csv', parse_dates=[
-#                  'date'], index_col='date')
 returns = df['price_return']
 split_date = '2020-12-31'
 R_test = df[df.index &gt;= split_date]['price_return'].rolling(
     window=5).std().dropna()</code></pre>
 </div></div>
 </section>
-<div id="697d9ee0" class="cell markdown">
+<div id="d803b7aa" class="cell markdown">
 <section id="análisis-exploratorio." class="level2">
 <h2 class="anchored" data-anchor-id="análisis-exploratorio.">Análisis Exploratorio.</h2>
 <section id="serie-histórica" class="level3">
@@ -271,7 +269,7 @@ R_test = df[df.index &gt;= split_date]['price_return'].rolling(
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div id="cell-fig-price-return-series" class="cell" data-execution_count="3">
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-fig-price-return-series" class="cell" data-execution_count="4">
 <pre><code>#| label: fig-price-return-series
 #| fig-cap: Serie de retornos diarios IRP-GOBIX.
 fig, ax = plt.subplots(figsize=(12, 10))
@@ -296,12 +294,12 @@ Serie de retornos diarios IRP-GOBIX.
 </div>
 </div>
 </div></div>
-<div id="d7104774" class="cell markdown">
+<div id="3d65740e" class="cell markdown">
 <section id="análisis-descriptivo-de-la-muestra" class="level3">
 <h3 class="anchored" data-anchor-id="análisis-descriptivo-de-la-muestra">Análisis descriptivo de la muestra</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div id="cell-return-descriptive-stats" class="cell" data-execution_count="4">
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-return-descriptive-stats" class="cell" data-execution_count="5">
 <pre><code>#| label: return-descriptive-stats
 #| fig-cap: Tabla de las estadísticas descriptiva de la serie de retornos
 desc_stats = returns.describe()
@@ -361,12 +359,12 @@ Markdown(descriptive_table.to_markdown(index=False))</code></pre>
 <p>Tabla de las estadísticas descriptiva de la serie de retornos</p>
 </div>
 </div></div>
-<div id="2e2383d2" class="cell markdown">
+<div id="8b9067fb" class="cell markdown">
 <section id="ajuste-de-distribuciones" class="level3">
 <h3 class="anchored" data-anchor-id="ajuste-de-distribuciones">Ajuste de distribuciones</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div id="cell-fig-distribution-fitting" class="cell" data-execution_count="5">
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-distribution-fitting" class="cell" data-execution_count="6">
 <pre><code>#| label: fig-distribution-fitting
 #| fig-cap: Ajuste de distribuciones a los retornos de precio.
 distributions = [stats.norm, stats.t]
@@ -396,12 +394,12 @@ Ajuste de distribuciones a los retornos de precio.
 </div>
 </div>
 </div></div>
-<div id="16dd16ac" class="cell markdown">
+<div id="7bc01ac4" class="cell markdown">
 <section id="q-q-plot-con-respecto-a-distribución-t" class="level3">
 <h3 class="anchored" data-anchor-id="q-q-plot-con-respecto-a-distribución-t">Q-Q plot con respecto a distribución t</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div id="cell-fig-tqq-plot" class="cell" data-execution_count="6">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="cell-fig-tqq-plot" class="cell" data-execution_count="7">
 <pre><code>#| label: fig-tqq-plot
 #| fig-cap: Q-Q Plot de retornos de precio contra la distribución t.
 t_params = stats.t.fit(returns)
@@ -423,12 +421,12 @@ Q-Q Plot de retornos de precio contra la distribución t.
 </div>
 </div>
 </div></div>
-<div id="2a503e70" class="cell markdown">
+<div id="f7f868d7" class="cell markdown">
 <section id="kolmorov-smirnov-test-para-distribución-t" class="level3">
 <h3 class="anchored" data-anchor-id="kolmorov-smirnov-test-para-distribución-t">Kolmorov Smirnov test para distribución t</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div id="kolmorov-smirnov" class="cell" data-execution_count="7">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="kolmorov-smirnov" class="cell" data-execution_count="8">
 <pre><code>#| label: kolmorov-smirnov
 ks_stat, p_value = stats.kstest(returns, 't', args=t_params)
 print(f"Kolmogorov-Smirnov statistic: {ks_stat}")
@@ -438,12 +436,12 @@ print(f"P-value: {p_value}")</code></pre>
 P-value: 0.0827419967953622</code></pre>
 </div>
 </div></div>
-<div id="b1a5160d" class="cell markdown">
+<div id="8351244d" class="cell markdown">
 <section id="test-de-estacionariedad-robustez" class="level3">
 <h3 class="anchored" data-anchor-id="test-de-estacionariedad-robustez">Test de estacionariedad/ robustez</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div id="adf" class="cell" data-execution_count="8">
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="adf" class="cell" data-execution_count="9">
 <pre><code>#| label: adf
 result = adfuller(returns)
 print('ADF Statistic:', result[0])
@@ -453,12 +451,12 @@ print('p-value:', result[1])</code></pre>
 p-value: 1.2332976276203498e-24</code></pre>
 </div>
 </div></div>
-<div id="a4a94f7a" class="cell markdown">
+<div id="e28b6d7c" class="cell markdown">
 <section id="test-de-autocorrelación" class="level3">
 <h3 class="anchored" data-anchor-id="test-de-autocorrelación">Test de autocorrelación</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div id="cell-fig-acf-pacf" class="cell" data-execution_count="9">
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-fig-acf-pacf" class="cell" data-execution_count="10">
 <pre><code>#| label: fig-acf-pacf
 #| fig-cap: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos.
 fig, axes = plt.subplots(2, 1, figsize=(10, 8))
@@ -483,7 +481,7 @@ Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF)
 </div>
 </div>
 </div></div>
-<div id="7f5cb522" class="cell markdown">
+<div id="8f839f53" class="cell markdown">
 <section id="resultados" class="level2">
 <h2 class="anchored" data-anchor-id="resultados">Resultados</h2>
 <section id="estimación-del-modelo-arima" class="level3">
@@ -491,7 +489,7 @@ Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF)
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div id="cell-arima-model" class="cell" data-execution_count="10">
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="cell-arima-model" class="cell" data-execution_count="11">
 <pre><code>#| label: arima-model
 #| fig-cap: Modelo ARIMA de maxima verosimilitud para la serie de retornos.
 model_auto = auto_arima(returns)
@@ -520,7 +518,7 @@ model_auto.summary()</code></pre>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>16:13:37</td>
+<td>16:58:02</td>
 <td data-quarto-table-cell-role="th">BIC</td>
 <td>17775.173</td>
 </tr>
@@ -674,12 +672,12 @@ model_auto.summary()</code></pre>
 <p>Modelo ARIMA de maxima verosimilitud para la serie de retornos.</p>
 </div>
 </div></div>
-<div id="756ad78f" class="cell markdown">
+<div id="4473659c" class="cell markdown">
 <section id="estimación-del-ar-garch" class="level3">
 <h3 class="anchored" data-anchor-id="estimación-del-ar-garch">Estimación del AR-GARCH</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div id="garch-model-fitting" class="cell" data-execution_count="11">
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="garch-model-fitting" class="cell" data-execution_count="12">
 <pre><code>#| label: garch-model-fitting
 #| fig-cap: Ajuste del modelo Zero-Garch ala serie de retornos
 ar = arch_model(returns, mean='Zero', vol='GARCH', dist='t')
@@ -718,12 +716,12 @@ Optimization terminated successfully    (Exit mode 0)
             Gradient evaluations: 26</code></pre>
 </div>
 </div></div>
-<div id="7100b669" class="cell markdown">
+<div id="a8f7ee48" class="cell markdown">
 <section id="resultados-del-ar-garch" class="level3">
 <h3 class="anchored" data-anchor-id="resultados-del-ar-garch">Resultados del AR-GARCH</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div id="cell-garch-model" class="cell" data-execution_count="12">
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-garch-model" class="cell" data-execution_count="13">
 <pre><code>#| label: garch-model
 #| fig-cap: Modelo Zero-Garch de la serie de retornos
 HTML(res.summary().as_html())</code></pre>
@@ -775,7 +773,7 @@ HTML(res.summary().as_html())</code></pre>
 </tr>
 <tr class="even">
 <td data-quarto-table-cell-role="th">Time:</td>
-<td>16:13:37</td>
+<td>16:58:02</td>
 <td data-quarto-table-cell-role="th">Df Model:</td>
 <td>0</td>
 </tr>
@@ -847,12 +845,12 @@ HTML(res.summary().as_html())</code></pre>
 <p>Modelo Zero-Garch de la serie de retornos</p>
 </div>
 </div></div>
-<div id="2916d873" class="cell markdown">
+<div id="c862dace" class="cell markdown">
 <section id="residuos-del-ar-garch" class="level3">
 <h3 class="anchored" data-anchor-id="residuos-del-ar-garch">Residuos del AR-GARCH</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div id="cell-fig-garch-residuals" class="cell" data-execution_count="13">
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-fig-garch-residuals" class="cell" data-execution_count="14">
 <pre><code>#| label: fig-garch-residuals
 #| fig-cap: Residuos del modelo AR-GARCH.
 fig = res.plot()</code></pre>
@@ -869,12 +867,12 @@ Residuos del modelo AR-GARCH.
 </div>
 </div>
 </div></div>
-<div id="8c13fda3" class="cell markdown">
+<div id="76e0ecd8" class="cell markdown">
 <section id="residuos-contra-volatilidad-condicional" class="level3">
 <h3 class="anchored" data-anchor-id="residuos-contra-volatilidad-condicional">Residuos contra volatilidad condicional</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div id="cell-fig-residuals-vs-volatility" class="cell" data-execution_count="14">
+<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="cell-fig-residuals-vs-volatility" class="cell" data-execution_count="15">
 <pre><code>#| label: fig-residuals-vs-volatility
 #| fig-cap: Residuos contra la volatilidad condicional del AR-GARCH.
 std_resid = res.resid / res.conditional_volatility
@@ -895,7 +893,7 @@ Residuos contra la volatilidad condicional del AR-GARCH.
 </div>
 </div>
 </div></div>
-<div id="e33df4a4" class="cell markdown">
+<div id="7a683b3b" class="cell markdown">
 <section id="evaluación-retrospectiva-backtesting" class="level2">
 <h2 class="anchored" data-anchor-id="evaluación-retrospectiva-backtesting">Evaluación Retrospectiva (Backtesting)</h2>
 <section id="conversion-de-varianza-predicha." class="level3">
@@ -903,19 +901,19 @@ Residuos contra la volatilidad condicional del AR-GARCH.
 </section>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div id="forecast" class="cell" data-execution_count="15">
+<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="forecast" class="cell" data-execution_count="16">
 <pre><code>#| label: forecast
 forecasts = res.forecast(horizon=1)
 forecasted_std = np.sqrt(forecasts.variance)
 forecasted_std = forecasted_std[forecasted_std.index &gt;
                                 split_date].loc[R_test.index, 'h.1']</code></pre>
 </div></div>
-<div id="074df983" class="cell markdown">
+<div id="9cb84250" class="cell markdown">
 <section id="mape-del-modelo" class="level3">
 <h3 class="anchored" data-anchor-id="mape-del-modelo">MAPE del modelo</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div id="mape" class="cell" data-execution_count="16">
+<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="mape" class="cell" data-execution_count="17">
 <pre><code>#| label: mape
 def MAPE(actual, predicted):
     actual_std = actual.rolling(window=5).std().dropna()
@@ -927,12 +925,12 @@ print(f"MAPE on Test Set (based on moving std): {mape_value:.2f}%")</code></pre>
 <pre><code>MAPE on Test Set (based on moving std): 739.70%</code></pre>
 </div>
 </div></div>
-<div id="70226b56" class="cell markdown">
+<div id="d1187815" class="cell markdown">
 <section id="predichos-vs-actuales-plot-backtested" class="level3">
 <h3 class="anchored" data-anchor-id="predichos-vs-actuales-plot-backtested">Predichos vs Actuales Plot-Backtested</h3>
 </section>
 </div>
-<div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div id="cell-fig-predicted-vs-actual-backtest" class="cell" data-execution_count="17">
+<div class="cell-container"><div class="cell-decorator"><pre>In [18]:</pre></div><div id="cell-fig-predicted-vs-actual-backtest" class="cell" data-execution_count="18">
 <pre><code>#| label: fig-predicted-vs-actual-backtest
 #| fig-cap: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -1376,7 +1374,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"descPosition":"bottom","loop":false,"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom"});
+</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"descPosition":"bottom","loop":false,"selector":".lightbox","closeEffect":"zoom","openEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
