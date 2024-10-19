@@ -27,6 +27,8 @@ La República Dominicana es el país latinoamericano que más ha crecido en los 
 
 Este estudio tiene como objetivo analizar los retornos y volatilidad del mercado de deuda publica Dominicana mediante la aplicación de modelos ARMA-GARCH, con el fin de identificar patrones y predecir su comportamiento futuro. Los resultados ofrecerán información valiosa para inversores, contribuyendo al entendimiento profundo del mercado de renta fija dominicano y facilitando una gestión más eficiente del riesgo.
 
+## El Mercado de Deuda Pública Dominicana
+
 ## Metodología
 
 El modelo ARIMA(p,d,q), donde AR(p) es el componente autorregresivo de orden p, d denota el orden de la diferencia aplicada para transformar una serie temporal no estacionaria en estacionaria, y MA(q) representa el promedio móvil de orden q. La esencia del modelo ARIMA radica en la combinación de la operación de diferenciación y el modelo ARMA. Cualquier serie no estacionaria puede volverse estacionaria mediante una diferenciación de orden adecuado, permitiendo así ajustar un modelo ARMA a la serie transformada.
@@ -52,13 +54,9 @@ El modelo GARCH, propuesto por Bollerslev, atribuye la volatilidad actual tanto 
 ## Datos
 
 ### Fuente de datos
-Un Índice Financiero es una medida estadística que refleja el valor de un conjunto de activos
-financieros agrupados de acuerdo con ciertos criterios. Estos se utilizan como objetivo de
-rendimiento de portafolios, referencias sobre las características retorno/riesgo de una clase de
-activo y como referencia para productos anclados a índices. (Bloomberg, 2023)
+Un Índice Financiero es una medida estadística que refleja el valor de un conjunto de activos financieros agrupados de acuerdo con ciertos criterios.Estos se utilizan como objetivo de rendimiento de portafolios, referencias sobre las características retorno/riesgo de una clase de activo y como referencia para productos anclados a índices. (Bloomberg, 2023)
 
-En el mercado de renta fija de la República Dominicana, el único índice público es el GOBIX, que
-representa la deuda gubernamental consolidada en peso. Este índice está compuesto por títulos emitidos localmente por el Banco Central y el Ministerio de Hacienda, y se publica en dos modalidades: índice de precio limpio e índice de retorno-precio. Para este estudio, se utilizará el índice de retorno precio @retorno-precio, ya que aisla el componente de retorno de mercado el cual es el objetivo de estudio. 
+En el mercado de renta fija de la República Dominicana, el único índice público es el GOBIX, que representa la deuda gubernamental consolidada en peso. Este índice está compuesto por títulos emitidos localmente por el Banco Central y el Ministerio de Hacienda, y se publica en dos modalidades: índice de precio limpio e índice de retorno-precio. Para este estudio, se utilizará el índice de retorno precio @retorno-precio, ya que aisla el componente de retorno de mercado el cual es el objetivo de estudio. 
 
 El GOBIX se caracteriza por los siguientes criterios:
 
@@ -131,38 +129,7 @@ En cuanto a la Función de Autocorrelación Parcial (PACF), también se observa 
 
 #### Representacion matematica del modelo  AR-GARCH(1,1)
 
-La ecuación de la media (componente ARMA):
 
-$$
-\hat{y}_t = -0.4856 + \epsilon_t
-$$
-
-donde:
-- $-0.4856$ es la constante del modelo.
-
-El término de error $\epsilon_t$ sigue un proceso GARCH(1,1):
-
-$$
-\epsilon_t = \sqrt{\sigma_t} z_t, \quad \sigma_t^2 = 200.4681 + 0.3243 \epsilon_{t-1}^2 + 0.6757 \sigma_{t-1}^2
-$$
-
-donde:
-
-- $\sigma_t^2$ es la varianza condicional,
-
-- $\omega = 200.4681$ es la constante de la ecuación de volatilidad,
-
-- $\alpha_1 = 0.3243$ es el coeficiente ARCH que captura el impacto de los shocks pasados $\epsilon_{t-1}^2$,
-
-- $\beta_1 = 0.6757$ es el coeficiente GARCH que captura la persistencia de la volatilidad pasada $\sigma_{t-1}^2$.
-
-Finalmente, el término de error $\epsilon_t$ sigue una distribución t de Student con $\nu = 2.3311$ grados de libertad:
-
-$$
-\epsilon_t \sim t_{2.3311}(0, \sigma_t^2)
-$$
-
-donde $\nu$ representa los grados de libertad de la distribución t de Student.
 
 <!-- No giher order garch models outperform the garch (1,1) when it comes to variance of markets returns -->
 ### Evaluación Retrospectiva (Backtesting)

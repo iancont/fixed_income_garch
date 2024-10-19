@@ -38,12 +38,10 @@ R_test = df[df.index >= split_date]['price_return'].rolling(
 # | label: fig-price-return-series
 # | fig-cap: Serie de retornos diarios IRP-GOBIX.
 fig, ax = plt.subplots(figsize=(12, 10))
-ax.plot(df.index, df['price_return'], label='Retorno Precio Diario')
-ax.set_ylabel('Price Return')
+ax.plot(df.index, df['price_return'])
+ax.set_ylabel('Retorno Precio (BPS)')
 ax.set_xlim([df.index.min(), df.index.max()])
-ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
 ax.legend()
-plt.title('Serie de retornos diarios IRP-GOBIX')
 plt.show()
 ```
 
@@ -75,19 +73,18 @@ descriptive_table
 ```{python}
 # | label: fig-distribution-fitting
 # | fig-cap: Ajuste de distribuciones a los retornos de precio.
-distributions = [stats.norm, stats.lognorm, stats.t]
+distributions = [stats.norm, stats.t]
 
 plt.figure(figsize=(10, 6))
-plt.hist(returns, bins=50, density=True, alpha=0.6, label='Empirical returns')
+plt.hist(returns, bins=50, density=True, alpha=0.6, label='Resultados Empíricos')
 
 for dist in distributions:
     params = dist.fit(returns)
     x = np.linspace(returns.min(), returns.max(), 100)
     plt.plot(x, dist.pdf(x, *params), label=f'{dist.name} fit')
 
-plt.title('Distribution Fitting to Price Returns')
-plt.xlabel('Price Return')
-plt.ylabel('Density')
+plt.xlabel('Retorno Precio (BPS)')
+plt.ylabel('Verosimilitud')
 plt.legend()
 plt.show()
 ```
@@ -100,7 +97,6 @@ t_params = stats.t.fit(returns)
 
 fig, ax = plt.subplots(figsize=(12, 10))
 stats.probplot(returns, dist="t", sparams=t_params, plot=plt)
-plt.title("Q-Q Plot of Price Return against Student's t-distribution")
 plt.grid(True)
 plt.show()
 ```
@@ -127,10 +123,10 @@ print('p-value:', result[1])
 # | fig-cap: Función de autocorrelación (ACF) y función de autocorrelación parcial (PACF) de los retornos.
 fig, axes = plt.subplots(2, 1, figsize=(10, 8))
 plot_acf(returns, lags=24, ax=axes[0])
-axes[0].set_title('Autocorrelation Function (ACF)')
+axes[0].set_title('Función de Autocorrelación (ACF)')
 
 plot_pacf(returns, lags=12, ax=axes[1])
-axes[1].set_title('Partial Autocorrelation Function (PACF)')
+axes[1].set_title('Función de Autocorrelación Parcial (PACF)')
 
 plt.tight_layout()
 plt.show()
@@ -147,10 +143,16 @@ model_auto.summary()
 
 ### Estimación del AR-GARCH
 ```{python}
-# | label: garch-model
-# | fig-cap: Modelo Zero-Garch de la serie de retornos
+# | label: garch-model-fitting
+# | fig-cap: Ajuste del modelo Zero-Garch ala serie de retornos
 ar = arch_model(returns, mean='Zero', vol='GARCH', dist='t')
 res = ar.fit(last_obs=split_date)
+```
+
+### Resultados del AR-GARCH
+```{python}
+# | label: garch-model
+# | fig-cap: Modelo Zero-Garch de la serie de retornos
 res.summary()
 ```
 
@@ -168,7 +170,7 @@ fig = res.plot()
 std_resid = res.resid / res.conditional_volatility
 unit_var_resid = res.resid / res.resid.std()
 df = pd.concat([std_resid, unit_var_resid], axis=1)
-df.columns = ["Std Resids", "Unit Variance Resids"]
+df.columns = ["Residuos Estandarizados", "Residuos de Varianza Unitaria"]
 subplot = df.plot(kind="kde", xlim=(-4, 4))
 ```
 
@@ -190,7 +192,6 @@ def MAPE(actual, predicted):
     actual_std = actual.rolling(window=5).std().dropna()
     return np.mean(np.abs((actual_std - predicted) / actual_std)) * 100
 
-
 mape_value = MAPE(R_test, forecasted_std)
 print(f"MAPE on Test Set (based on moving std): {mape_value:.2f}%")
 ```
@@ -198,14 +199,13 @@ print(f"MAPE on Test Set (based on moving std): {mape_value:.2f}%")
 ### Predichos vs Actuales Plot-Backtested
 ```{python}
 # | label: fig-predicted-vs-actual-backtest
-# | fig-cap: Comparación de valores predichos y actuales en el backtesting.
+# | fig-cap: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH
 plt.figure(figsize=(10, 6))
 plt.plot(R_test.index, R_test,
-         label='Actual Moving Std', color='blue')
+         label='Desviación Estándar Móvil Real', color='blue')
 plt.plot(forecasted_std.index,
-         forecasted_std, label='Forecasted Moving Std', color='red', linestyle='--')
-
-plt.title('Actual vs Forecasted Moving Std - Zero-GARCH Model')
+         forecasted_std, label='Desviación Estándar Móvil Pronosticada', color='red', linestyle='--')
+ax.set_xlim([forecasted_std.index.min(), forecasted_std.index.max()])
 plt.legend()
 plt.show()
 ```
