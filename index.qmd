@@ -14,12 +14,35 @@ abstract: |
   Este estudio tiene como objetivo analizar los retornos y la volatilidad del mercado de deuda pública dominicana mediante la aplicación de modelos ARMA-GARCH. A través de estos modelos, se busca identificar patrones en el comportamiento de los retornos y predecir su evolución futura. 
 date: last-modified
 bibliography: references.bib
+execute:
+  echo: false
 nocite: |
   @*
 citation:
   container-title: Referencias
 number-sections: true
 ---
+```{python}
+# | label: importing-libraries
+# Manejo de datos y análisis
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
+
+# Modelos estadísticos y econométricos
+import statsmodels.api as sm
+from pmdarima.arima import auto_arima
+from arch import arch_model
+```
+
+```{python}
+# | label: importing-data
+df = pd.read_csv('data\csv\irp.csv', parse_dates=['date'], index_col='date')
+returns = df['price_return']
+split_date = '2020-12-31'
+R_test = df[df.index >= split_date]['price_return'].rolling(
+    window=5).std().dropna()
+```
 
 # Introducción
 
@@ -27,9 +50,7 @@ La República Dominicana es el país latinoamericano que más ha crecido en los 
 
 Este estudio tiene como objetivo analizar los retornos y volatilidad del mercado de deuda publica Dominicana mediante la aplicación de modelos ARMA-GARCH, con el fin de identificar patrones y predecir su comportamiento futuro. Los resultados ofrecerán información valiosa para inversores, contribuyendo al entendimiento profundo del mercado de renta fija dominicano y facilitando una gestión más eficiente del riesgo.
 
-## El Mercado de Deuda Pública Dominicana
-
-## Metodología
+# Metodología
 
 El modelo ARIMA(p,d,q), donde AR(p) es el componente autorregresivo de orden p, d denota el orden de la diferencia aplicada para transformar una serie temporal no estacionaria en estacionaria, y MA(q) representa el promedio móvil de orden q. La esencia del modelo ARIMA radica en la combinación de la operación de diferenciación y el modelo ARMA. Cualquier serie no estacionaria puede volverse estacionaria mediante una diferenciación de orden adecuado, permitiendo así ajustar un modelo ARMA a la serie transformada.
 
@@ -113,7 +134,27 @@ El análisis de la serie de retornos diarios del IRP-GOBIX revela un comportamie
 
 ## Análisis descriptivo de la muestra {#sec-estadistica-descriptiva}
 
-{{< embed notebooks/data-screening.qmd#tbl-return-descriptive-stats >}}
+```{python}
+# | label: return-descriptive-stats
+# | fig-cap: Tabla de las estadísticas descriptiva de la serie de retornos
+desc_stats = returns.describe()
+
+skewness = returns.skew()
+kurtosis = returns.kurtosis()
+jb_test = sm.stats.jarque_bera(returns)
+
+descriptive_table = pd.DataFrame({
+    'Observations': [int(desc_stats['count'])],
+    'Mean': [desc_stats['mean']],
+    'Median': [desc_stats['50%']],
+    'Std. Dev': [desc_stats['std']],
+    'Skewness': [skewness],
+    'Kurtosis': [kurtosis],
+    'Jarque-Bera': [jb_test[0]],
+    'Prob.': [jb_test[1]]
+})
+descriptive_table
+```
 
 El análisis descriptivo de los retornos ofrece una perspectiva más detallada sobre la distribución de la serie. Con un total de 1,941 observaciones, la **media** de los retornos es de $1.353251$, lo que indica un rendimiento promedio positivo. Sin embargo, la **mediana** de $-0.318044$ sugiere un leve sesgo hacia valores negativos, lo que refleja que la mayoría de los retornos tienden a ser ligeramente inferiores a la media. La **desviación estándar**, con un valor de $23.502911$, revela una amplia dispersión de los datos, lo que confirma la presencia de una volatilidad significativa en los rendimientos, muy superior al valor medio.
 
@@ -145,26 +186,80 @@ El análisis de autocorrelación nos proporciona más detalles sobre la estructu
 
 En conjunto, este análisis exploratorio sugiere que la serie de retornos del IRP-GOBIX presenta características complejas, como **volatility clustering**, alta **leptocurtosis**, y una estructura de autocorrelación que se ajusta bien a un modelo MA(1). Estos hallazgos proporcionan una base sólida para la estimación de modelos ARMA-GARCH, los cuales podrán capturar de manera efectiva las dinámicas de volatilidad y retornos en el mercado de deuda pública dominicano.
 
-# Resultados 
+# Resultados
 
-{{< embed notebooks/data-screening.qmd#arima-model >}}
+El presente análisis tiene como objetivo modelar la serie temporal de retornos del índice IRP-GOBIX utilizando inicialmente un modelo ARIMA automático (auto-ARIMA) para determinar si es posible capturar la dinámica de los retornos con un modelo basado únicamente en niveles y diferencias de los datos. Adicionalmente, se evaluará la presencia de problemas estructurales, como la heterocedasticidad, que podrían afectar la consistencia del modelo ARIMA. En caso de que este enfoque no sea adecuado, recurriremos a un modelo Zero-GARCH, un tipo específico de GARCH que asume una media cero para los retornos. Este modelo es particularmente útil en mercados de tasas de interés, donde se ha demostrado que los retornos tienden a cero en el largo plazo debido a la fuerte regresión hacia la media de estas variables. 
 
-{{< embed notebooks/data-screening.qmd#garch-model >}}
+## Análisis del modelo ARIMA
+```{python}
+# | label: arima-model
+# | fig-cap: Modelo ARIMA de maxima verosimilitud para la serie de retornos.
+# | warning: false
+model_auto = auto_arima(returns)
+model_auto.summary()
+```
 
-## Representación matemática del modelo  AR-GARCH(1,1)
+El modelo SARIMAX(3, 0, 4) se estimó con el objetivo de capturar la dinámica subyacente de la serie de retornos. Aunque los resultados muestran que algunos de los coeficientes del componente autorregresivo (AR) y del promedio móvil (MA) son estadísticamente significativos (e.g., $AR(3)$ con un coeficiente de $0.7691$, $p < 0.001$ y $MA(2)$ con $p < 0.01$), el desempeño general del modelo presenta ciertas limitaciones. El test de heterocedasticidad muestra un valor de 1.11, lo que indica la presencia de heterocedasticidad en la serie, un problema común en series financieras, donde la varianza de los errores no es constante a lo largo del tiempo.
+
+Además, el estadístico de Jarque-Bera de 4395.18, con una probabilidad de $p = 0.00$, confirma que los residuos no siguen una distribución normal, lo que refuerza la idea de que un modelo basado únicamente en niveles, como el ARIMA, podría no ser suficiente para capturar la volatilidad inherente a los retornos del mercado de deuda pública dominicano. Dado que los modelos ARIMA no están diseñados para abordar adecuadamente la heterocedasticidad, pasamos a estimar un modelo GARCH, que es más apropiado para capturar los cambios en la volatilidad.
+
+## Modelo Zero-GARCH
+
+Para abordar las limitaciones del modelo ARIMA, se estimó un modelo GARCH(1,1) con media cero, siguiendo la estructura propuesta por Robert F. Engle, quien demostró que los modelos GARCH(1,1) son altamente efectivos para capturar la volatilidad en los retornos de mercados financieros. La elección de un modelo con media cero se justifica porque en mercados de deuda pública y tasas de interés, los retornos tienden a revertir a la media, y en el largo plazo se espera que los retornos por apreciación de capital converjan a cero. 
+
+<!-- Ojo, hay que citar a Engle -->
 
 <!-- No giher order garch models outperform the garch (1,1) when it comes to variance of markets returns -->
+
+```{python}
+# | label: garch-model-fitting
+# | fig-cap: Ajuste del modelo Zero-Garch ala serie de retornos
+# | warning: false
+# | output: false
+
+ar = arch_model(returns, mean='Zero', vol='GARCH', dist='t')
+res = ar.fit(last_obs=split_date)
+```
+
+```{python}
+# | label: garch-model
+# | fig-cap: Modelo Zero-Garch de la serie de retornos
+res.summary()
+```
+
+Los resultados del modelo Zero-GARCH confirman un buen ajuste a la volatilidad de la serie de retornos. El coeficiente $\omega$ del proceso de volatilidad es de $58.8679$ ($p < 0.05$), lo que indica un nivel base significativo de volatilidad en la serie. El parámetro $\alpha_1$, que mide la influencia de los shocks pasados en la volatilidad actual, es positivo y significativo ($0.1892$, $p < 0.01$), lo que sugiere que los shocks pasados tienen un impacto considerable en la volatilidad presente. Por otro lado, $\beta_1$ ($0.7737$, $p < 0.001$) indica que existe una fuerte persistencia en la volatilidad, característica común en los mercados financieros, donde las fases de alta volatilidad tienden a durar varios periodos.
+
+El uso de la distribución t de Student para los residuos estandarizados, con un parámetro $\nu$ de $2.7894$ ($p < 0.001$), confirma la presencia de colas más gruesas en la distribución de los retornos, lo que es consistente con la leptocurtosis observada en la serie de retornos.
+
+### Residuos del Zero-GARCH
+
+{{< embed notebooks/data-screening.qmd#fig-garch-residuals >}}
+
+Al analizar los residuos estandarizados y la volatilidad condicional en el modelo Zero-GARCH, observamos cómo la volatilidad responde de manera dinámica a los choques en los retornos. En la primera gráfica, se aprecia que la volatilidad condicional es mayor durante episodios donde los residuos estandarizados alcanzan picos extremos, especialmente en periodos de alta volatilidad como 2018. Esto refuerza la capacidad del modelo GARCH para capturar **volatility clustering**, un fenómeno donde la alta volatilidad tiende a agruparse en ciertos periodos. Además, la persistencia de la volatilidad condicional a lo largo del tiempo confirma que los choques pasados tienen un efecto prolongado, lo cual es coherente con los resultados obtenidos en los coeficientes del modelo GARCH.
+
+### Residuos contra volatilidad condicional
+
+{{< embed notebooks/data-screening.qmd#fig-residuals-vs-volatility >}}
+
+En cuanto a la comparación entre los residuos estandarizados y los residuos de varianza unitaria, la segunda gráfica revela que ambos conjuntos de residuos presentan distribuciones similares, con una alta concentración alrededor de cero. Sin embargo, las colas más gruesas en los residuos estandarizados indican la presencia de eventos extremos más pronunciados, los cuales son típicos en series financieras que presentan leptocurtosis. Esta comparación subraya la importancia de utilizar distribuciones robustas, como la t de Student, para capturar adecuadamente las colas de la distribución, tal como lo hace el modelo GARCH en este caso.
+
+Los resultados del modelo Zero-GARCH confirman su capacidad para modelar de manera efectiva la volatilidad en los retornos del IRP-GOBIX. Aunque el modelo auto-ARIMA capturó algunos patrones de la serie, su inconsistencia en la presencia de heterocedasticidad subraya la necesidad de un enfoque basado en modelos GARCH. El modelo Zero-GARCH no solo demuestra un buen ajuste a los datos, sino que también captura la dinámica de la volatilidad condicional y los residuos estandarizados, revelando la presencia de **volatility clustering** y la persistencia en la volatilidad.
+
+La comparación entre los residuos estandarizados y los residuos de varianza unitaria destaca la capacidad del modelo para manejar eventos extremos, una característica esencial en el análisis de series financieras. En resumen, el modelo Zero-GARCH es más robusto y adecuado para describir las dinámicas de volatilidad en el mercado de deuda pública dominicano, brindando información crucial sobre la persistencia y el comportamiento de la volatilidad a lo largo del tiempo.
+
 ## Evaluación Retrospectiva (Backtesting)
 
-## Discusión
 
-## Conclusión
+
+# Discusión
+
+# Conclusión
 
 <!-- {{< embed notebooks/data-screening.qmd#fig-spatial-plot >}}
 
 @fig-spatial-plot shows the location of recent Earthquakes on La Palma. -->
 
-## Referencias
+# Referencias
 
 ::: {#refs}
 :::

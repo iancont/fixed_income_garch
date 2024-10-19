@@ -57,8 +57,7 @@ plt.show()
 
 ### Análisis descriptivo de la muestra
 ```{python}
-# | label: tbl-return-descriptive-stats
-# | output: asis
+# | label: return-descriptive-stats
 # | fig-cap: Tabla de las estadísticas descriptiva de la serie de retornos
 desc_stats = returns.describe()
 
@@ -210,11 +209,11 @@ print(f"MAPE on Test Set (based on moving std): {mape_value:.2f}%")
 ```{python}
 # | label: fig-predicted-vs-actual-backtest
 # | fig-cap: Desviación Estándar Móvil Real vs Pronosticada - Modelo Zero-GARCH
-plt.figure(figsize=(10, 6))
-plt.plot(R_test.index, R_test,
-         label='Desviación Estándar Móvil Real', color='blue')
-plt.plot(forecasted_std.index,
-         forecasted_std, label='Desviación Estándar Móvil Pronosticada', color='red', linestyle='--')
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(R_test.index, R_test,
+        label='Desviación Estándar Móvil Real', color='blue')
+ax.plot(forecasted_std.index,
+        forecasted_std, label='Desviación Estándar Móvil Pronosticada', color='red', linestyle='--')
 ax.set_xlim([forecasted_std.index.min(), forecasted_std.index.max()])
 plt.legend()
 plt.show()
